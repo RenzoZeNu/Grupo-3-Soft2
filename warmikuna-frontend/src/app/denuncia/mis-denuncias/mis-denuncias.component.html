@@ -1,0 +1,28 @@
+<div class="container mt-4">
+  <h3>Mis denuncias</h3>
+
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <div *ngIf="denuncias.length === 0 && !error">
+    No tienes denuncias registradas.
+  </div>
+
+  <table class="table table-bordered mt-3" *ngIf="denuncias.length > 0">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Anónima</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of denuncias">
+        <td>{{ d.descripcion }}</td>
+        <td>{{ d.creadaEn | date:'short' }}</td>
+        <td>{{ d.estado }}</td>
+        <td>{{ d.anonima ? 'Sí' : 'No' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

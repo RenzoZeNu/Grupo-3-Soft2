@@ -1,0 +1,7 @@
+<nav class="navbar navbar-light bg-light p-2">
+  <span class="navbar-brand">Warmikuna</span>
+
+  <button class="btn btn-outline-danger" *ngIf="isLoggedIn()" (click)="logout()">Cerrar sesión</button>
+</nav>
+
+<router-outlet></router-outlet>

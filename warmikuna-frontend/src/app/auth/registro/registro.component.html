@@ -1,0 +1,29 @@
+<div class="container mt-4">
+  <h3>Registro de usuario</h3>
+
+  <form [formGroup]="form" (ngSubmit)="registrar()">
+    <div class="mb-2">
+      <label>Nombre:</label>
+      <input class="form-control" formControlName="nombre">
+    </div>
+
+    <div class="mb-2">
+      <label>Correo:</label>
+      <input class="form-control" formControlName="correo">
+    </div>
+
+    <div class="mb-2">
+      <label>Contraseña:</label>
+      <input type="password" class="form-control" formControlName="contrasena">
+    </div>
+
+    <div class="mb-2">
+      <label>DNI (8 dígitos):</label>
+      <input class="form-control" formControlName="dni">
+    </div>
+
+    <button class="btn btn-primary" [disabled]="form.invalid">Registrarse</button>
+  </form>
+
+
+</div>

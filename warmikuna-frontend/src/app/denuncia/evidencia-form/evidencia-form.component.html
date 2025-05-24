@@ -1,0 +1,28 @@
+<div class="container mt-4">
+  <h3>Adjuntar evidencia</h3>
+
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+    <div class="mb-3">
+      <label>ID de denuncia:</label>
+      <input class="form-control" formControlName="denunciaId">
+    </div>
+
+    <div class="mb-3">
+      <label>Tipo de evidencia:</label>
+      <select class="form-control" formControlName="tipo">
+        <option value="imagen">Imagen</option>
+        <option value="video">Video</option>
+        <option value="audio">Audio</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>URL de evidencia:</label>
+      <input class="form-control" formControlName="url">
+    </div>
+
+    <button class="btn btn-primary" [disabled]="form.invalid">Subir evidencia</button>
+  </form>
+
+  <div class="mt-3 text-success" *ngIf="mensaje">{{ mensaje }}</div>
+</div>

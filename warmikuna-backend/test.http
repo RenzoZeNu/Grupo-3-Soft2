@@ -1,0 +1,9 @@
+### HU-04: Denuncia autenticada con DNI válido
+POST http://localhost:3000/api/denuncias
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiY29ycmVvIjoiZGFuaWVsYUBleGFtcGxlLmNvbSIsIm5vbWJyZSI6IkRhbmllbGEgTGXDs24iLCJkbmkiOiIxMjM0NTY3OCIsImlhdCI6MTc0Nzg3MjU5MSwiZXhwIjoxNzQ3ODc2MTkxfQ.MYgHgjet5rvi5WP1cZ4bYquimgh0oLUS3y3jdCL_87M
+Content-Type: application/json
+
+{
+  "descripcion": "Testimonio verificado con identidad.",
+  "anonima": false
+}

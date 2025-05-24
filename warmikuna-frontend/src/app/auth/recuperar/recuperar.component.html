@@ -1,0 +1,22 @@
+<div class="container mt-4">
+  <h3>Recuperar contraseña</h3>
+
+  <form [formGroup]="form" (ngSubmit)="recuperar()">
+    <div class="mb-2">
+      <label>Correo electrónico:</label>
+      <input class="form-control" formControlName="correo">
+    </div>
+
+    <div class="mb-2">
+      <label>DNI (8 dígitos):</label>
+      <input class="form-control" formControlName="dni">
+    </div>
+
+    <div class="mb-2">
+      <label>Nueva contraseña:</label>
+      <input type="password" class="form-control" formControlName="nuevaContrasena">
+    </div>
+
+    <button class="btn btn-primary" [disabled]="form.invalid">Actualizar contraseña</button>
+  </form>
+</div>
