@@ -10,14 +10,19 @@ import { DenunciaService } from '../../services/denuncia.service';
 })
 export class MisDenunciasComponent implements OnInit {
   denuncias: any[] = [];
-  error: string = '';
 
   constructor(private denunciaService: DenunciaService) {}
 
   ngOnInit(): void {
-    this.denunciaService.obtenerMisDenuncias().subscribe({
-      next: (res: any) => this.denuncias = res.denuncias,
-      error: (err: any) => this.error = err.error?.error || 'Error al cargar denuncias'
+    const token = localStorage.getItem('token') || '';
+
+    this.denunciaService.obtenerMisDenuncias(token).subscribe({
+      next: (data: any) => {
+        this.denuncias = data;
+      },
+      error: (err) => {
+        console.error('Error al obtener denuncias:', err);
+      }
     });
   }
 }

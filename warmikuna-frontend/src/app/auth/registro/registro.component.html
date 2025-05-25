@@ -1,29 +1,30 @@
-<div class="container mt-4">
-  <h3>Registro de usuario</h3>
+<h3 class="mb-4">Registro de nuevo usuario</h3>
 
-  <form [formGroup]="form" (ngSubmit)="registrar()">
-    <div class="mb-2">
-      <label>Nombre:</label>
-      <input class="form-control" formControlName="nombre">
-    </div>
+<form [formGroup]="form" (ngSubmit)="registrar()">
+  <div class="mb-3">
+    <label>Nombre:</label>
+    <input type="text" formControlName="nombre" class="form-control" />
+  </div>
 
-    <div class="mb-2">
-      <label>Correo:</label>
-      <input class="form-control" formControlName="correo">
-    </div>
+  <div class="mb-3">
+    <label>Correo electrónico:</label>
+    <input type="email" formControlName="correo" class="form-control" />
+  </div>
 
-    <div class="mb-2">
-      <label>Contraseña:</label>
-      <input type="password" class="form-control" formControlName="contrasena">
-    </div>
+  <div class="mb-3">
+    <label>Contraseña:</label>
+    <input type="password" formControlName="contrasena" class="form-control" />
+  </div>
 
-    <div class="mb-2">
-      <label>DNI (8 dígitos):</label>
-      <input class="form-control" formControlName="dni">
-    </div>
+  <div class="mb-3">
+    <label>DNI (8 dígitos):</label>
+    <input type="text" formControlName="dni" class="form-control" maxlength="8" />
+  </div>
 
-    <button class="btn btn-primary" [disabled]="form.invalid">Registrarse</button>
-  </form>
+  <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Registrarse</button>
+</form>
 
 
-</div>
+<div class="mt-3 text-success" *ngIf="mensaje">{{ mensaje }}</div>
+<div class="mt-3 text-danger" *ngIf="error">{{ error }}</div>
+

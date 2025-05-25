@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 })
 export class RegistroComponent {
   form: FormGroup;
+  mensaje: string = '';
+  error: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -21,8 +23,8 @@ export class RegistroComponent {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(6)]],
-      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+      contrasena: ['', Validators.required],
+      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]]
     });
   }
 
@@ -31,13 +33,15 @@ export class RegistroComponent {
 
     this.authService.registrar(this.form.value).subscribe({
       next: (res: any) => {
-        window.alert('✅ Registro completado exitosamente');
-        this.router.navigate(['/login']);
+        this.mensaje = res.mensaje;
+        this.error = '';
+        setTimeout(() => this.router.navigate(['/login']), 1500);
       },
       error: (err) => {
-        window.alert(err.error?.error || '❌ Error al registrar');
+        console.error(err);
+        this.mensaje = '';
+        this.error = err.error?.error || 'Error al registrar';
       }
     });
   }
 }
-

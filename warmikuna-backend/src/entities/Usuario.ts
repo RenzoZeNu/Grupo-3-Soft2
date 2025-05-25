@@ -3,9 +3,11 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  Unique
 } from "typeorm";
 
 @Entity("usuarios")
+@Unique(["dni"])
 export class Usuario {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,7 +21,7 @@ export class Usuario {
   @Column()
   contrasena: string;
 
-  @Column({ length: 8 })
+  @Column({ type: "varchar", length: 8, unique: true })
   dni: string;
 
   @Column({ default: false })

@@ -1,24 +1,40 @@
 import { AppDataSource } from "../database/data-source";
 import { Denuncia } from "../entities/Denuncia";
-import { Usuario } from "../entities/Usuario";
 
-export class DenunciaService {
-  private denunciaRepo = AppDataSource.getRepository(Denuncia);
-  private usuarioRepo = AppDataSource.getRepository(Usuario);
+class DenunciaService {
+  private denunciaRepository = AppDataSource.getRepository(Denuncia);
 
-  async crear(usuarioId: number, descripcion: string, anonima: boolean) {
-    const usuario = await this.usuarioRepo.findOneBy({ id: usuarioId });
-    if (!usuario) throw new Error("Usuario no encontrado");
+  async crear(correo: string, descripcion: string, anonima: boolean) {
+    const denuncia = this.denunciaRepository.create({
+      descripcion,
+      anonima,
+      estado: "en revisión",
+      creada_en: new Date(),
+      correo_usuario: correo,
+    });
 
-    const denuncia = this.denunciaRepo.create({ descripcion, anonima, usuario });
-    return await this.denunciaRepo.save(denuncia);
+    return this.denunciaRepository.save(denuncia);
   }
 
-  async obtenerPorUsuario(usuarioId: number) {
-  return await this.denunciaRepo.find({
-    where: { usuario: { id: usuarioId } },
-    order: { creadaEn: "DESC" },
-  });
+  async crearConArchivo(correo: string, descripcion: string, anonima: boolean, evidenciaArchivo: string | null) {
+    const denuncia = this.denunciaRepository.create({
+      descripcion,
+      anonima,
+      estado: "en revisión",
+      creada_en: new Date(),
+      evidenciaArchivo: evidenciaArchivo ?? null,
+      correo_usuario: correo,
+    });
+
+    return this.denunciaRepository.save(denuncia);
+  }
+
+  async obtenerPorCorreo(correo: string) {
+    return this.denunciaRepository.find({
+      where: { correo_usuario: correo },
+      order: { creada_en: "DESC" },
+    });
+  }
 }
 
-}
+export const denunciaService = new DenunciaService();

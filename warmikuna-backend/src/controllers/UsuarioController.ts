@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { UsuarioService } from "../services/UsuarioService";
+import { AppDataSource } from "../database/data-source";
+import { Usuario } from "../entities/Usuario";
 
 const usuarioService = new UsuarioService();
+const usuarioRepository = AppDataSource.getRepository(Usuario);
 
 export class UsuarioController {
   static async registrar(req: Request, res: Response) {
@@ -12,6 +15,18 @@ export class UsuarioController {
     }
 
     try {
+      // Verificar si ya existe un usuario con el mismo correo o DNI
+      const usuarioExistente = await usuarioRepository.findOne({
+        where: [
+          { correo },
+          { dni }
+        ]
+      });
+
+      if (usuarioExistente) {
+        return res.status(400).json({ mensaje: "El correo o DNI ya están registrados" });
+      }
+
       const usuario = await usuarioService.registrar(nombre, correo, contrasena, dni);
       res.status(201).json({ mensaje: "Usuario registrado con éxito", usuario });
     } catch (error: any) {
@@ -35,18 +50,17 @@ export class UsuarioController {
   }
 
   static async recuperarContrasena(req: Request, res: Response) {
-  const { correo, dni, nuevaContrasena } = req.body;
+    const { correo, dni, nuevaContrasena } = req.body;
 
-  if (!correo || !dni || !nuevaContrasena) {
-    return res.status(400).json({ mensaje: "Todos los campos son obligatorios" });
+    if (!correo || !dni || !nuevaContrasena) {
+      return res.status(400).json({ mensaje: "Todos los campos son obligatorios" });
+    }
+
+    try {
+      await usuarioService.recuperarContrasena(correo, dni, nuevaContrasena);
+      res.json({ mensaje: "Contraseña actualizada correctamente" });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
   }
-
-  try {
-    await usuarioService.recuperarContrasena(correo, dni, nuevaContrasena);
-    res.json({ mensaje: "Contraseña actualizada correctamente" });
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
-  }
-}
-
 }

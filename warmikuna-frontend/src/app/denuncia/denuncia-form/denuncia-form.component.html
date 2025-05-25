@@ -7,15 +7,18 @@
       <textarea class="form-control" formControlName="descripcion" rows="4"></textarea>
     </div>
 
-    <div class="mb-3">
-      <label>
-        <input type="checkbox" formControlName="anonima">
-        ¿Deseas hacer esta denuncia anónima?
-      </label>
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" formControlName="anonima" id="anonima">
+      <label class="form-check-label" for="anonima">¿Deseas hacer esta denuncia anónima?</label>
     </div>
 
-    <button class="btn btn-danger" [disabled]="form.invalid">Enviar denuncia</button>
+    <div class="mb-3">
+      <label>Adjuntar evidencia (opcional):</label>
+      <input type="file" (change)="onFileSelected($event)" class="form-control">
+    </div>
+
+    <button class="btn btn-danger" type="submit" [disabled]="form.invalid">Enviar denuncia</button>
   </form>
 
-  <div class="mt-3 text-info" *ngIf="mensaje">{{ mensaje }}</div>
+  <div *ngIf="mensaje" class="mt-3 text-success">{{ mensaje }}</div>
 </div>
