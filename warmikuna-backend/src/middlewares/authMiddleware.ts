@@ -13,13 +13,18 @@ declare global {
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers["authorization"]?.split(" ")[1];
 
-  if (!token) return res.status(401).json({ error: "Token no proporcionado" });
+  if (!token) {
+    res.status(401).json({ error: "Token no proporcionado" });
+    return;
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { correo: string };
     req.usuario = { correo: decoded.correo };
-    next();
+    return next(); // ✅ necesario return
   } catch (error) {
-    return res.status(403).json({ error: "Token inválido" });
+    res.status(403).json({ error: "Token inválido" });
+    return;
   }
 };
+

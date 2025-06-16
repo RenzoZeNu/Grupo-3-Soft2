@@ -4,6 +4,7 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router = Router();
 
-router.post("/", authMiddleware, EvidenciaController.adjuntar);
+router.post("/", authMiddleware, EvidenciaController.adjuntar as any); 
 
 export default router;
+

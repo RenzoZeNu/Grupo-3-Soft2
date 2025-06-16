@@ -18,7 +18,7 @@ export class DenunciaController {
         anonima === "true"
       );
 
-      return res.status(201).json({ mensaje: "Denuncia registrada", denuncia });
+      return res.status(201).json({ mensaje: "Denuncia creada exitosamente", denuncia });
     } catch (error: any) {
       console.error("❌ Error en crear:", error);
       return res.status(500).json({ error: "Error al registrar la denuncia" });

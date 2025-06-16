@@ -8,25 +8,26 @@ import {
 @Entity("denuncias")
 export class Denuncia {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column("text")
-  descripcion: string;
+  descripcion!: string;
 
   @Column({ default: true })
-  anonima: boolean;
+  anonima!: boolean;
 
   @Column({ default: "en revisión" })
-  estado: string;
+  estado!: string;
 
   @CreateDateColumn({ name: "creada_en" })
-  creada_en: Date;
+  creada_en!: Date;
 
-  @Column({ nullable: true })
-  evidenciaArchivo: string;
+  @Column({ nullable: true, type: 'varchar' })
+  evidenciaArchivo!: string | null;
+
 
   @Column()
-  correo_usuario: string;
+  correo_usuario!: string;
 }
 
   

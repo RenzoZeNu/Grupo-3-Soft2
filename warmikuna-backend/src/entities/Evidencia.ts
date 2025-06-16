@@ -11,19 +11,19 @@ import {
   @Entity("evidencias")
   export class Evidencia {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
   
     @Column()
-    tipo: string; // 'imagen', 'video', 'audio'
+    tipo!: string; // 'imagen', 'video', 'audio'
   
     @Column()
-    url: string;
+    url!: string;
   
     @CreateDateColumn({ name: "subida_en" })
-    subidaEn: Date;
+    subidaEn!: Date;
   
     @ManyToOne(() => Denuncia)
     @JoinColumn({ name: "denuncia_id" })
-    denuncia: Denuncia;
+    denuncia!: Denuncia;
   }
   
