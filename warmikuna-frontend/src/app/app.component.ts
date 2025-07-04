@@ -2,8 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule }     from '@angular/common';
 import { FormsModule }      from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PreferenciasService, Preferencias } from './services/preferencias.service';
+import {
+  TranslateModule,
+  TranslateService
+} from '@ngx-translate/core';
+import {
+  PreferenciasService,
+  Preferencias
+} from './services/preferencias.service';
 
 @Component({
   selector: 'app-root',
@@ -28,12 +34,16 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // 1) Idioma guardado o por defecto
-    const lang = localStorage.getItem('idioma') as any;
-    this.idioma = lang || 'es';
+    // Registrar idiomas y fallback
+    this.translate.addLangs(['es','qu','ay','en']);
+    this.translate.setDefaultLang('es');
+
+    // Leer idioma guardado o usar default
+    const savedLang = localStorage.getItem('idioma') as any;
+    this.idioma = savedLang || this.translate.getDefaultLang();
     this.translate.use(this.idioma);
 
-    // 2) Dalton
+    // Inicializar modo daltónico
     this.modoDaltonico = localStorage.getItem('modoDaltonico') === 'true';
     this.applyDalton(this.modoDaltonico);
   }
@@ -69,11 +79,12 @@ export class AppComponent implements OnInit {
       modoDaltonico: this.modoDaltonico
     };
     this.prefs.actualizar(p).subscribe({
-      next: () => console.log('Preferencias guardadas'),
-      error: err => console.error('Error guardando prefs', err)
+      next: () => {},
+      error: () => {}
     });
   }
 }
+
 
 
 
