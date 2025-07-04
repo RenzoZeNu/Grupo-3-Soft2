@@ -3,30 +3,36 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  Unique
 } from "typeorm";
 
 @Entity("usuarios")
-@Unique(["dni"])
 export class Usuario {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ length: 100 })
   nombre!: string;
 
-  @Column({ unique: true })
+  @Column({ length: 100, unique: true })
   correo!: string;
 
   @Column()
   contrasena!: string;
 
-  @Column({ type: "varchar", length: 8, unique: true })
+  @Column({ length: 8, unique: true })
   dni!: string;
 
-  @Column({ default: false })
-  es_anonimo!: boolean;
+  @Column({ name: "es_anonimo", type: "boolean", default: false })
+  esAnonimo!: boolean;
+
+  // Preferencias de idioma y modo daltónico
+  @Column({ type: "varchar", length: 5, default: "es" })
+  idioma!: string;
+
+  @Column({ type: "boolean", default: false })
+  modoDaltonico!: boolean;
 
   @CreateDateColumn({ name: "creado_en" })
   creadoEn!: Date;
 }
+

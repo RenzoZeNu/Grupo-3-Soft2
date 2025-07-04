@@ -1,10 +1,20 @@
-import { Router, RequestHandler } from "express";
+import { Router } from "express";
 import { UsuarioController } from "../controllers/UsuarioController";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router = Router();
 
-router.post("/registrar", UsuarioController.registrar as RequestHandler);
-router.post("/login", UsuarioController.login as RequestHandler);
-router.post("/recuperar-contrasena", UsuarioController.recuperarContrasena as RequestHandler);
+// Registro, login y recuperación
+router.post("/registrar", UsuarioController.registrar);
+router.post("/login", UsuarioController.login);
+router.post("/recuperar", UsuarioController.recuperarContrasena);
+
+// HU-12 / HU-13: preferencias (idioma y modo daltónico)
+router.put(
+  "/preferencias",
+  authMiddleware,
+  UsuarioController.actualizarPreferencias
+);
 
 export default router;
+

@@ -1,9 +1,8 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
+dotenv.config();
 import { AppDataSource } from "./database/data-source";
 import app from "./app";
-
-dotenv.config();
 
 AppDataSource.initialize()
   .then(() => {
@@ -13,4 +12,4 @@ AppDataSource.initialize()
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
     });
   })
-  .catch((error) => console.error("❌ Error en la conexión:", error));
+  .catch((error) => console.error("❌ Error en la conexión a la base de datos:", error));
