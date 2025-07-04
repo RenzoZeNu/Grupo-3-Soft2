@@ -1,0 +1,6 @@
+body {
+  padding-top: 56px;
+}
+.color-blind {
+  filter: grayscale(100%) contrast(150%);
+}

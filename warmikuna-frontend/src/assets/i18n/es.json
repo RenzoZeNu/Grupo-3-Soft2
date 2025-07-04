@@ -1,12 +1,15 @@
 {
+  "MENU": {
+    "DENUNCIAR": "Realizar denuncia",
+    "MIS_DENUNCIAS": "Mis denuncias",
+    "LOGOUT": "Cerrar sesión"
+  },
   "SETTINGS": {
     "TITLE": "Ajustes",
     "LANGUAGE": "Idioma",
     "COLORBLIND": "Modo daltónico",
     "SAVE": "Guardar",
     "SAVED": "Preferencias guardadas"
-  },
-  "MENU": {
-    "SETTINGS": "Ajustes"
   }
 }
+

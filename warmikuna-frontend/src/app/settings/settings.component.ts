@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule }  from '@angular/forms';
+import { CommonModule }    from '@angular/common';
+import { FormsModule }     from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PreferenciasService, Preferencias } from '../services/preferencias.service';
 
@@ -12,18 +12,18 @@ import { PreferenciasService, Preferencias } from '../services/preferencias.serv
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  idioma: 'es' | 'qu' | 'ay';
+  idioma: 'es' | 'qu' | 'ay' | 'en' = 'es';
   modoDaltonico = false;
 
   constructor(
     private translate: TranslateService,
     private prefs: PreferenciasService,
     private renderer: Renderer2
-  ) {
-    this.idioma = this.translate.currentLang as any || 'es';
-  }
+  ) {}
 
   ngOnInit() {
+    this.idioma = (localStorage.getItem('idioma') as any) || this.translate.currentLang as any || 'es';
+    this.modoDaltonico = localStorage.getItem('modoDaltonico') === 'true';
     this.applyColorBlind(this.modoDaltonico);
   }
 
@@ -33,16 +33,14 @@ export class SettingsComponent implements OnInit {
   }
 
   guardar() {
-    // 1) Cambiar idioma
     this.translate.use(this.idioma);
-    // 2) Aplicar filtro daltónico
     this.applyColorBlind(this.modoDaltonico);
-    // 3) Guardar en backend
-    const prefs: Preferencias = {
-      idioma: this.idioma,
-      modoDaltonico: this.modoDaltonico
-    };
-    this.prefs.actualizar(prefs)
-      .subscribe(() => alert(this.translate.instant('SETTINGS.SAVED')));
+    localStorage.setItem('idioma', this.idioma);
+    localStorage.setItem('modoDaltonico', String(this.modoDaltonico));
+    const prefs: Preferencias = { idioma: this.idioma, modoDaltonico: this.modoDaltonico };
+    this.prefs.actualizar(prefs).subscribe(() => {
+      alert(this.translate.instant('SETTINGS.SAVED'));
+    });
   }
 }
+

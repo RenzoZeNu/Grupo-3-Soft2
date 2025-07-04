@@ -1,12 +1,14 @@
 {
-  "SETTINGS": {
-    "TITLE": "Ajustes (Q)",
-    "LANGUAGE": "Rimay",
-    "COLORBLIND": "Daltonismo runa",
-    "SAVE": "Allillanchiskay",
-    "SAVED": "Preferencias hamutrankichis"
-  },
   "MENU": {
-    "SETTINGS": "Ajustes"
+    "DENUNCIAR": "Kamachiy rikuy",
+    "MIS_DENUNCIAS": "Ñuqanchik rikuykuna",
+    "LOGOUT": "Qallariy"
+  },
+  "SETTINGS": {
+    "TITLE": "Ruraykuna",
+    "LANGUAGE": "Rimay",
+    "COLORBLIND": "Daltonimun munay",
+    "SAVE": "Allillanchiskay",
+    "SAVED": "Munakuy hamutuy"
   }
 }

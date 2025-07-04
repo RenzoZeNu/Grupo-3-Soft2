@@ -1,12 +1,14 @@
 {
-  "SETTINGS": {
-    "TITLE": "Ajustes (A)",
-    "LANGUAGE": "Aruma",
-    "COLORBLIND": "Daltonismo",
-    "SAVE": "Sutiyi!",
-    "SAVED": "Preferencias sarantawayki"
-  },
   "MENU": {
-    "SETTINGS": "Ajustes"
+    "DENUNCIAR": "Kamawan uñjayaña",
+    "MIS_DENUNCIAS": "Nayax uñjayata",
+    "LOGOUT": "Sutupañä"
+  },
+  "SETTINGS": {
+    "TITLE": "Akunakasu",
+    "LANGUAGE": "Aruma",
+    "COLORBLIND": "Daltonismomax",
+    "SAVE": "Aruskipañ",
+    "SAVED": "Akunakasu sarantawayi"
   }
 }

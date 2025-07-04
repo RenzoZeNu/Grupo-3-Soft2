@@ -4,17 +4,44 @@
   <div class="collapse navbar-collapse" *ngIf="isLoggedIn()">
     <ul class="navbar-nav me-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/denunciar">Realizar denuncia</a>
+        <a class="nav-link" routerLink="/denunciar">{{ 'MENU.DENUNCIAR' | translate }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/mis-denuncias">Mis denuncias</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/settings">{{ 'MENU.SETTINGS' | translate }}Menu Settings</a>
+        <a class="nav-link" routerLink="/mis-denuncias">{{ 'MENU.MIS_DENUNCIAS' | translate }}</a>
       </li>
     </ul>
-    <button class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
+
+    <!-- Selector de idioma -->
+    <select
+      class="form-select form-select-sm w-auto me-2"
+      [(ngModel)]="idioma"
+      (change)="onIdiomaChange()"
+    >
+      <option value="es">ES</option>
+      <option value="qu">QU</option>
+      <option value="ay">AY</option>
+      <option value="en">EN</option>
+    </select>
+
+    <!-- Toggle modo daltónico -->
+    <div class="form-check form-switch text-nowrap me-2">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="colorBlindSwitch"
+        [(ngModel)]="modoDaltonico"
+        (change)="onModoDaltonicoChange()"
+      />
+      <label class="form-check-label" for="colorBlindSwitch">
+        {{ 'SETTINGS.COLORBLIND' | translate }}
+      </label>
+    </div>
+
+    <button class="btn btn-outline-danger" (click)="logout()">
+      {{ 'MENU.LOGOUT' | translate }}
+    </button>
   </div>
 </nav>
 
 <router-outlet></router-outlet>
+

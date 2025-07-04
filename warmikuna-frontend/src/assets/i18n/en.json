@@ -1,0 +1,14 @@
+{
+  "MENU": {
+    "DENUNCIAR": "Make a report",
+    "MIS_DENUNCIAS": "My reports",
+    "LOGOUT": "Log out"
+  },
+  "SETTINGS": {
+    "TITLE": "Settings",
+    "LANGUAGE": "Language",
+    "COLORBLIND": "Color-blind mode",
+    "SAVE": "Save",
+    "SAVED": "Preferences saved"
+  }
+}

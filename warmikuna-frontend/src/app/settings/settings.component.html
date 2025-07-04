@@ -1,19 +1,29 @@
-<h2>{{ 'SETTINGS.TITLE' | translate }}</h2>
+<div class="container mt-4">
+  <h2>{{ 'SETTINGS.TITLE' | translate }}</h2>
 
-<label>
-  {{ 'SETTINGS.LANGUAGE' | translate }}
-  <select [(ngModel)]="idioma">
-    <option value="es">Español</option>
-    <option value="qu">Quechua</option>
-    <option value="ay">Aimara</option>
-  </select>
-</label>
+  <div class="mb-3">
+    <label class="form-label">{{ 'SETTINGS.LANGUAGE' | translate }}</label>
+    <select class="form-select w-auto" [(ngModel)]="idioma">
+      <option value="es">Español</option>
+      <option value="qu">Quechua</option>
+      <option value="ay">Aimara</option>
+      <option value="en">English</option>
+    </select>
+  </div>
 
-<label>
-  <input type="checkbox" [(ngModel)]="modoDaltonico" />
-  {{ 'SETTINGS.COLORBLIND' | translate }}
-</label>
+  <div class="form-check mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="colorBlindCheck"
+      [(ngModel)]="modoDaltonico"
+    />
+    <label class="form-check-label" for="colorBlindCheck">
+      {{ 'SETTINGS.COLORBLIND' | translate }}
+    </label>
+  </div>
 
-<button (click)="guardar()">
-  {{ 'SETTINGS.SAVE' | translate }}
-</button>
+  <button class="btn btn-primary" (click)="guardar()">
+    {{ 'SETTINGS.SAVE' | translate }}
+  </button>
+</div>

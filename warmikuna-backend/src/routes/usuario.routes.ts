@@ -4,12 +4,16 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router = Router();
 
-// Registro, login y recuperación
+// Registro de usuario
 router.post("/registrar", UsuarioController.registrar);
+
+// Login
 router.post("/login", UsuarioController.login);
+
+// Recuperar contraseña
 router.post("/recuperar", UsuarioController.recuperarContrasena);
 
-// HU-12 / HU-13: preferencias (idioma y modo daltónico)
+// Actualizar idioma y modo daltónico (requiere autenticación)
 router.put(
   "/preferencias",
   authMiddleware,
@@ -17,4 +21,3 @@ router.put(
 );
 
 export default router;
-
