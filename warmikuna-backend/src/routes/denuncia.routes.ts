@@ -32,5 +32,11 @@ router.post(
 // Consultar denuncias por usuario
 router.get("/mis-denuncias", authMiddleware, DenunciaController.obtenerPorUsuario as any);
 
+/* Registrar denuncia */
+router.post("/", DenunciaController.crear);
+
+/* Actualizar solo el estado de una denuncia */
+router.put("/:id/estado", DenunciaController.actualizarEstado);
+
 export default router;
 

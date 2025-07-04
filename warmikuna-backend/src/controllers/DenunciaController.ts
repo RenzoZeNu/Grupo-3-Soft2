@@ -1,74 +1,81 @@
 import { Request, Response } from "express";
 import { denunciaService } from "../services/DenunciaService";
+import { enviarCorreo } from "../utils/emailService";
 
 export class DenunciaController {
-  // Denuncia SIN archivo
-  static async crear(req: Request, res: Response) {
+  public static async crear(req: Request, res: Response): Promise<void> {
     try {
       const { descripcion, anonima } = req.body;
-      const correo = req.usuario?.correo;
+      // En tu middleware de autenticación guardas el usuario en req.usuario
+      const correo = (req as any).usuario?.correo ?? req.body.correo_usuario;
 
       if (!correo) {
-        return res.status(400).json({ error: "Correo no disponible en el token" });
+        res.status(400).json({ error: "Correo no disponible en la solicitud" });
+        return;
       }
 
+      /* Guarda la denuncia en BD */
       const denuncia = await denunciaService.crear(
         correo,
         descripcion,
-        anonima === "true"
+        anonima === "true" || anonima === true
       );
 
-      return res.status(201).json({ mensaje: "Denuncia creada exitosamente", denuncia });
-    } catch (error: any) {
-      console.error("❌ Error en crear:", error);
-      return res.status(500).json({ error: "Error al registrar la denuncia" });
+      /* Enviar correo de confirmación */
+      try {
+        await enviarCorreo(
+          correo,
+          "Confirmación de Registro de Denuncia",
+          `<p>Hola,</p>
+           <p>Tu denuncia fue registrada exitosamente.</p>
+           <p><strong>Código de denuncia:</strong> ${denuncia.id}</p>
+           <p>Gracias por confiar en Warmikuna.</p>`
+        );
+      } catch (mailErr) {
+        console.error("⚠️  Error enviando correo de confirmación:", mailErr);
+      }
+
+      res.status(201).json({ mensaje: "Denuncia creada exitosamente", denuncia });
+    } catch (err) {
+      console.error("❌  Error al crear denuncia:", err);
+      res.status(500).json({ error: "Error interno al crear denuncia" });
     }
   }
 
-  // Denuncia CON archivo
-  static async crearConArchivo(req: Request, res: Response) {
+  public static async actualizarEstado(req: Request, res: Response): Promise<void> {
     try {
-      const { descripcion, anonima } = req.body;
-      const archivo = req.file;
-      const correo = req.usuario?.correo;
+      const id = Number(req.params.id);
+      const { estado } = req.body;
 
-      console.log("📄 Descripción:", descripcion);
-      console.log("🧾 Anónima:", anonima);
-      console.log("📎 Archivo recibido:", archivo?.filename);
-      console.log("📧 Correo:", correo);
-
-      if (!correo) {
-        return res.status(400).json({ error: "Correo no disponible en el token" });
+      const denuncia = await denunciaService.buscarPorId(id);
+      if (!denuncia) {
+        res.status(404).json({ error: "Denuncia no encontrada" });
+        return;
       }
 
-      const denuncia = await denunciaService.crearConArchivo(
-        correo,
-        descripcion,
-        anonima === "true",
-        archivo?.filename ?? null
-      );
+      const denunciaActualizada = await denunciaService.actualizarEstado(id, estado);
 
-      return res.status(201).json({ mensaje: "Denuncia registrada con archivo", denuncia });
-    } catch (error: any) {
-      console.error("❌ Error en crearConArchivo:", error);
-      return res.status(500).json({ error: "Error al registrar la denuncia con archivo" });
-    }
-  }
-
-  // Obtener denuncias por correo
-  static async obtenerPorUsuario(req: Request, res: Response) {
-    try {
-      const correo = req.usuario?.correo;
-
-      if (!correo) {
-        return res.status(400).json({ error: "Correo no disponible en el token" });
+      /* Enviar correo de actualización de estado */
+      try {
+        await enviarCorreo(
+          denuncia.correo_usuario,
+          "Actualización del Estado de tu Denuncia",
+          `<p>Hola,</p>
+           <p>El estado de tu denuncia <strong>${denuncia.id}</strong> se actualizó a: 
+           <strong>${estado}</strong>.</p>
+           <p>Gracias por usar Warmikuna.</p>`
+        );
+      } catch (mailErr) {
+        console.error("⚠️  Error enviando correo de actualización:", mailErr);
       }
 
-      const denuncias = await denunciaService.obtenerPorCorreo(correo);
-      return res.status(200).json(denuncias);
-    } catch (error: any) {
-      console.error("❌ Error al obtener denuncias:", error);
-      return res.status(500).json({ error: "Error al obtener denuncias" });
+      res.status(200).json({
+        mensaje: "Estado actualizado correctamente",
+        denuncia: denunciaActualizada
+      });
+    } catch (err) {
+      console.error("❌  Error al actualizar estado:", err);
+      res.status(500).json({ error: "Error interno al actualizar estado" });
     }
   }
 }
