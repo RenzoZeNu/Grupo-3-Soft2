@@ -1,22 +1,24 @@
 <div class="container mt-4">
-  <h3>Recuperar contraseña</h3>
-
-  <form [formGroup]="form" (ngSubmit)="recuperar()">
-    <div class="mb-2">
-      <label>Correo electrónico:</label>
-      <input class="form-control" formControlName="correo">
+  <h2>{{ 'RECOVER.TITLE' | translate }}</h2>
+  <form (ngSubmit)="recuperarContrasena()">
+    <div class="mb-3">
+      <label for="correo">{{ 'RECOVER.EMAIL' | translate }}</label>
+      <input id="correo" class="form-control"
+             [(ngModel)]="correo" name="correo" required />
     </div>
-
-    <div class="mb-2">
-      <label>DNI (8 dígitos):</label>
-      <input class="form-control" formControlName="dni">
+    <div class="mb-3">
+      <label for="dni">{{ 'RECOVER.DNI' | translate }}</label>
+      <input id="dni" class="form-control"
+             [(ngModel)]="dni" name="dni" required />
     </div>
-
-    <div class="mb-2">
-      <label>Nueva contraseña:</label>
-      <input type="password" class="form-control" formControlName="nuevaContrasena">
+    <div class="mb-3">
+      <label for="nuevaContrasena">{{ 'RECOVER.NEW_PASSWORD' | translate }}</label>
+      <input id="nuevaContrasena" type="password" class="form-control"
+             [(ngModel)]="nuevaContrasena" name="nuevaContrasena" required />
     </div>
-
-    <button class="btn btn-primary" [disabled]="form.invalid">Actualizar contraseña</button>
+    <button class="btn btn-primary">{{ 'RECOVER.SUBMIT' | translate }}</button>
   </form>
+  <p *ngIf="mensaje" class="mt-3">{{ mensaje }}</p>
 </div>
+
+

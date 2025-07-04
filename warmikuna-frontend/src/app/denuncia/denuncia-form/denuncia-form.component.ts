@@ -1,60 +1,51 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { DenunciaService } from '../../services/denuncia.service';
-import { Router } from '@angular/router';
+import { CommonModule }  from '@angular/common';
+import { FormsModule }   from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import {
+  TranslateModule,
+  TranslateService
+} from '@ngx-translate/core';
+import { DenunciaService, Denuncia } from '../../services/denuncia.service';
 
 @Component({
   selector: 'app-denuncia-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './denuncia-form.component.html'
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
+  templateUrl: './denuncia-form.component.html',
+  styleUrls: ['./denuncia-form.component.css']
 })
 export class DenunciaFormComponent {
-  form: FormGroup;
-  mensaje: string = '';
-  archivoSeleccionado: File | null = null;
+  descripcion = '';
+  anonima = false;
+  mensaje?: string;
+  error?: string;
 
   constructor(
-    private fb: FormBuilder,
-    private denunciaService: DenunciaService,
-    private router: Router
-  ) {
-    this.form = this.fb.group({
-      descripcion: ['', Validators.required],
-      anonima: [false]
-    });
-  }
+    private service: DenunciaService,
+    private router: Router,
+    private translate: TranslateService
+  ) {}
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.archivoSeleccionado = file;
-    }
-  }
-
-  enviar() {
-    const formData = new FormData();
-    formData.append('descripcion', this.form.value.descripcion);
-    formData.append('anonima', this.form.value.anonima);
-
-    if (this.archivoSeleccionado) {
-      formData.append('archivo', this.archivoSeleccionado);
-    }
-
-    const token = localStorage.getItem('token') || '';
-
-    this.denunciaService.crearConArchivo(formData, token).subscribe({
-      next: (res: any) => {
-        this.mensaje = res.mensaje;
-        this.form.reset();
-        this.archivoSeleccionado = null;
-        setTimeout(() => this.router.navigate(['/mis-denuncias']), 1500);
-      },
-      error: (err) => {
-        console.error(err);
-        this.mensaje = err.error?.error || 'Error al registrar la denuncia con archivo';
-      }
-    });
+  enviarDenuncia() {
+    this.mensaje = undefined;
+    this.error = undefined;
+    this.service.crear(this.descripcion, this.anonima)
+      .subscribe({
+        next: (denuncia: Denuncia) => {
+          // Éxito: muestra mensaje y redirige a Mis Denuncias
+          this.mensaje = this.translate.instant('FORMULARIO_DENUNCIA.SUCCESS');
+          // Opcional: limpiar formulario
+          this.descripcion = '';
+          this.anonima = false;
+          // Navegar para que el usuario vea su lista
+          setTimeout(() => this.router.navigate(['/mis-denuncias']), 1000);
+        },
+        error: err => {
+          this.error = err.error?.message || err.message;
+        }
+      });
   }
 }
+
+

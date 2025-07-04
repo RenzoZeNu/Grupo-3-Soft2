@@ -1,28 +1,31 @@
 <div class="container mt-4">
-  <h3>Iniciar sesión</h3>
-
-  <form [formGroup]="form" (ngSubmit)="login()">
-    <div class="mb-2">
-      <label>Correo:</label>
-      <input class="form-control" formControlName="correo">
+  <h2>{{ 'LOGIN.TITLE' | translate }}</h2>
+  <form (ngSubmit)="login()">
+    <div class="mb-3">
+      <label for="correo">{{ 'LOGIN.EMAIL' | translate }}</label>
+      <input
+        id="correo"
+        class="form-control"
+        type="email"
+        [(ngModel)]="correo"
+        name="correo"
+        required />
     </div>
-
-    <div class="mb-2">
-      <label>Contraseña:</label>
-      <input type="password" class="form-control" formControlName="contrasena">
+    <div class="mb-3">
+      <label for="contrasena">{{ 'LOGIN.PASSWORD' | translate }}</label>
+      <input
+        id="contrasena"
+        class="form-control"
+        type="password"
+        [(ngModel)]="contrasena"
+        name="contrasena"
+        required />
     </div>
-
-    <button class="btn btn-success" [disabled]="form.invalid">Iniciar sesión</button>
+    <button class="btn btn-primary">{{ 'LOGIN.SUBMIT' | translate }}</button>
   </form>
-
-  <div class="mt-3 text-info" *ngIf="mensaje">{{ mensaje }}</div>
-
-  <div class="mt-4 d-flex align-items-center">
-    <button class="btn btn-secondary" (click)="irARegistro()">Regístrate</button>
-  </div>
-
-  <div class="mt-3">
-  <button class="btn btn-outline-secondary" (click)="irARecuperar()">¿Olvidaste tu contraseña?</button>
-  </div>
-
+  <button class="btn btn-link" routerLink="/registro">{{ 'LOGIN.REGISTER' | translate }}</button>
+  <button class="btn btn-link" routerLink="/recuperar">{{ 'LOGIN.FORGOT' | translate }}</button>
+  <p *ngIf="mensaje" class="text-danger">{{ mensaje }}</p>
 </div>
+
+

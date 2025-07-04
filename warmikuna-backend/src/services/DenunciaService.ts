@@ -1,59 +1,63 @@
 import { AppDataSource } from "../database/data-source";
-import { Denuncia } from "../entities/Denuncia";
+import { Denuncia }      from "../entities/Denuncia";
 
 class DenunciaService {
-  private repo = AppDataSource.getRepository(Denuncia);
+  private denunciaRepository = AppDataSource.getRepository(Denuncia);
 
-  /** Crea una denuncia sin archivo */
-  async crear(correo: string, descripcion: string, anonima: boolean) {
-    const d = this.repo.create({
+  async crear(
+    correo: string,
+    descripcion: string,
+    anonima: boolean
+  ): Promise<Denuncia> {
+    const denuncia = this.denunciaRepository.create({
       descripcion,
       anonima,
       estado: "en revisión",
       creada_en: new Date(),
+      evidenciaArchivo: null,
       correo_usuario: correo,
     });
-    return this.repo.save(d);
+    return this.denunciaRepository.save(denuncia);
   }
 
-  /** Crea una denuncia con archivo adjunto */
   async crearConArchivo(
     correo: string,
     descripcion: string,
     anonima: boolean,
     evidenciaArchivo: string | null
-  ) {
-    const d = this.repo.create({
+  ): Promise<Denuncia> {
+    const denuncia = this.denunciaRepository.create({
       descripcion,
       anonima,
       estado: "en revisión",
       creada_en: new Date(),
-      evidenciaArchivo: evidenciaArchivo ?? null,
+      evidenciaArchivo,
       correo_usuario: correo,
     });
-    return this.repo.save(d);
+    return this.denunciaRepository.save(denuncia);
   }
 
-  /** Obtiene todas las denuncias de un usuario */
-  async obtenerPorCorreo(correo: string) {
-    return this.repo.find({
+  async obtenerPorCorreo(correo: string): Promise<Denuncia[]> {
+    return this.denunciaRepository.find({
       where: { correo_usuario: correo },
       order: { creada_en: "DESC" },
     });
   }
 
-  /** Busca una denuncia por su ID (HU-20) */
-  async buscarPorId(id: number) {
-    return this.repo.findOne({ where: { id } });
+  async buscarPorId(id: number): Promise<Denuncia | null> {
+    return this.denunciaRepository.findOneBy({ id });
   }
 
-  /** Actualiza únicamente el estado de una denuncia (HU-20) */
-  async actualizarEstado(id: number, nuevoEstado: string) {
-    const d = await this.repo.findOne({ where: { id } });
-    if (!d) return null;
-    d.estado = nuevoEstado;
-    return this.repo.save(d);
+  async actualizarEstado(
+    id: number,
+    nuevoEstado: string
+  ): Promise<Denuncia> {
+    const denuncia = await this.buscarPorId(id);
+    if (!denuncia) throw new Error("Denuncia no encontrada");
+    denuncia.estado = nuevoEstado;
+    return this.denunciaRepository.save(denuncia);
   }
 }
 
 export const denunciaService = new DenunciaService();
+

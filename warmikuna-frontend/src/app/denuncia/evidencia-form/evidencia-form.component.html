@@ -1,28 +1,47 @@
 <div class="container mt-4">
-  <h3>Adjuntar evidencia</h3>
-
-  <form [formGroup]="form" (ngSubmit)="enviar()">
+  <h2>{{ 'EVIDENCIA.TITLE' | translate }}</h2>
+  <form (ngSubmit)="subirEvidencia()">
     <div class="mb-3">
-      <label>ID de denuncia:</label>
-      <input class="form-control" formControlName="denunciaId">
+      <label for="denunciaId">{{ 'EVIDENCIA.ID' | translate }}</label>
+      <input
+        id="denunciaId"
+        class="form-control"
+        type="text"
+        [(ngModel)]="denunciaId"
+        name="denunciaId"
+        required
+      />
     </div>
-
     <div class="mb-3">
-      <label>Tipo de evidencia:</label>
-      <select class="form-control" formControlName="tipo">
-        <option value="imagen">Imagen</option>
-        <option value="video">Video</option>
-        <option value="audio">Audio</option>
+      <label>{{ 'EVIDENCIA.TYPE' | translate }}</label>
+      <select
+        class="form-select"
+        [(ngModel)]="tipo"
+        name="tipo"
+      >
+        <option value="imagen">{{ 'EVIDENCIA.TYPE_IMAGE' | translate }}</option>
+        <option value="video">{{ 'EVIDENCIA.TYPE_VIDEO' | translate }}</option>
+        <option value="audio">{{ 'EVIDENCIA.TYPE_AUDIO' | translate }}</option>
       </select>
     </div>
-
     <div class="mb-3">
-      <label>URL de evidencia:</label>
-      <input class="form-control" formControlName="url">
+      <label for="url">{{ 'EVIDENCIA.URL' | translate }}</label>
+      <input
+        id="url"
+        class="form-control"
+        type="text"
+        [(ngModel)]="url"
+        name="url"
+        required
+      />
     </div>
-
-    <button class="btn btn-primary" [disabled]="form.invalid">Subir evidencia</button>
+    <button type="submit" class="btn btn-primary">
+      {{ 'EVIDENCIA.SUBMIT' | translate }}
+    </button>
   </form>
-
-  <div class="mt-3 text-success" *ngIf="mensaje">{{ mensaje }}</div>
+  <div *ngIf="mensaje" class="alert alert-success mt-3">{{ mensaje }}</div>
+  <div *ngIf="error"   class="alert alert-danger mt-3">{{ error }}</div>
 </div>
+
+
+

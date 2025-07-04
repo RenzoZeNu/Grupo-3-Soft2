@@ -5,10 +5,62 @@
     "LOGOUT": "Log out"
   },
   "SETTINGS": {
-    "TITLE": "Settings",
-    "LANGUAGE": "Language",
-    "COLORBLIND": "Color-blind mode",
-    "SAVE": "Save",
-    "SAVED": "Preferences saved"
+    "COLORBLIND": "Color-blind mode"
+  },
+  "LOGIN": {
+    "TITLE": "Log In",
+    "EMAIL": "Email:",
+    "PASSWORD": "Password:",
+    "SUBMIT": "Log In",
+    "REGISTER": "Register",
+    "FORGOT": "Forgot password?",
+    "ERROR": "Invalid username or password"
+  },
+  "REGISTER": {
+    "TITLE": "User Registration",
+    "NAME": "Name:",
+    "EMAIL": "Email:",
+    "PASSWORD": "Password:",
+    "DNI": "DNI (8 digits):",
+    "SUBMIT": "Register",
+    "SUCCESS": "User registered successfully"
+  },
+  "RECOVER": {
+    "TITLE": "Recover Password",
+    "EMAIL": "Email:",
+    "DNI": "DNI (8 digits):",
+    "NEW_PASSWORD": "New password:",
+    "SUBMIT": "Update password",
+    "SUCCESS": "Password updated successfully"
+  },
+  "FORMULARIO_DENUNCIA": {
+    "TITLE": "Make a report",
+    "DESCRIPTION": "Description:",
+    "ANONYMOUS": "Submit anonymously?",
+    "SUBMIT": "Submit report",
+    "SUCCESS": "Report submitted successfully"
+  },
+  "EVIDENCIA": {
+    "TITLE": "Attach evidence",
+    "ID": "Report ID:",
+    "TYPE": "Evidence type:",
+    "TYPE_IMAGE": "Image",
+    "TYPE_VIDEO": "Video",
+    "TYPE_AUDIO": "Audio",
+    "URL": "Evidence URL:",
+    "SUBMIT": "Upload evidence",
+    "SUCCESS": "Evidence uploaded successfully"
+  },
+  "MIS_DENUNCIAS": {
+    "TITLE": "My reports",
+    "NO_RECORDS": "You have no reports.",
+    "COLUMNS": {
+      "DESCRIPTION": "Description",
+      "STATE": "Status",
+      "DATE": "Date",
+      "EVIDENCE": "Evidence"
+    },
+    "VIEW_FILE": "View file"
   }
 }
+

@@ -5,10 +5,62 @@
     "LOGOUT": "Sutupañä"
   },
   "SETTINGS": {
-    "TITLE": "Akunakasu",
-    "LANGUAGE": "Aruma",
-    "COLORBLIND": "Daltonismomax",
-    "SAVE": "Aruskipañ",
-    "SAVED": "Akunakasu sarantawayi"
+    "COLORBLIND": "Daltonismomax"
+  },
+  "LOGIN": {
+    "TITLE": "Sam uñjaya",
+    "EMAIL": "Email:",
+    "PASSWORD": "Sutiy:",
+    "SUBMIT": "Sam uñjaya",
+    "REGISTER": "Registra",
+    "FORGOT": "Sutita mayjt’iwa?",
+    "ERROR": "Email ni sutiy ajjitäkiti"
+  },
+  "REGISTER": {
+    "TITLE": "Usuario jikxataña",
+    "NAME": "Suti:",
+    "EMAIL": "Email:",
+    "PASSWORD": "Sutiy:",
+    "DNI": "DNI (8 números):",
+    "SUBMIT": "Registra",
+    "SUCCESS": "Usuario jikxatawa"
+  },
+  "RECOVER": {
+    "TITLE": "Sutiyan qillqt’aña",
+    "EMAIL": "Email:",
+    "DNI": "DNI (8 números):",
+    "NEW_PASSWORD": "Nuevo sutiy:",
+    "SUBMIT": "Qillqt’aña",
+    "SUCCESS": "Sutiy qillqt’a ajjitawa"
+  },
+  "FORMULARIO_DENUNCIA": {
+    "TITLE": "Kamawan uñjayaña",
+    "DESCRIPTION": "Descripción:",
+    "ANONYMOUS": "¿Sutfis ajjatänwa?",
+    "SUBMIT": "Uñjayaña",
+    "SUCCESS": "Uñjayaña askiwa"
+  },
+  "EVIDENCIA": {
+    "TITLE": "Evidencia apfontaña",
+    "ID": "Denuncia ID:",
+    "TYPE": "Evidencia laya:",
+    "TYPE_IMAGE": "Imagen",
+    "TYPE_VIDEO": "Video",
+    "TYPE_AUDIO": "Audio",
+    "URL": "Evidencia URL:",
+    "SUBMIT": "Apfontaña",
+    "SUCCESS": "Evidencia apfonta askiwa"
+  },
+  "MIS_DENUNCIAS": {
+    "TITLE": "Nayax uñjayata",
+    "NO_RECORDS": "Jani suma uñjayasitäkiti",
+    "COLUMNS": {
+      "DESCRIPTION": "Descripción",
+      "STATE": "Laya",
+      "DATE": "Fecha",
+      "EVIDENCE": "Evidencia"
+    },
+    "VIEW_FILE": "Archivo uñjata"
   }
 }
+

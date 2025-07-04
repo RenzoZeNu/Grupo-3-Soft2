@@ -5,11 +5,64 @@
     "LOGOUT": "Cerrar sesión"
   },
   "SETTINGS": {
-    "TITLE": "Ajustes",
-    "LANGUAGE": "Idioma",
-    "COLORBLIND": "Modo daltónico",
-    "SAVE": "Guardar",
-    "SAVED": "Preferencias guardadas"
+    "COLORBLIND": "Modo daltónico"
+  },
+  "LOGIN": {
+    "TITLE": "Iniciar sesión",
+    "EMAIL": "Correo:",
+    "PASSWORD": "Contraseña:",
+    "SUBMIT": "Iniciar sesión",
+    "REGISTER": "Regístrate",
+    "FORGOT": "¿Olvidaste tu contraseña?",
+    "ERROR": "Usuario o contraseña incorrectos"
+  },
+  "REGISTER": {
+    "TITLE": "Registro de nuevo usuario",
+    "NAME": "Nombre:",
+    "EMAIL": "Correo electrónico:",
+    "PASSWORD": "Contraseña:",
+    "DNI": "DNI (8 dígitos):",
+    "SUBMIT": "Registrarse",
+    "SUCCESS": "Usuario registrado correctamente"
+  },
+  "RECOVER": {
+    "TITLE": "Recuperar contraseña",
+    "EMAIL": "Correo electrónico:",
+    "DNI": "DNI (8 dígitos):",
+    "NEW_PASSWORD": "Nueva contraseña:",
+    "SUBMIT": "Actualizar contraseña",
+    "SUCCESS": "Contraseña actualizada correctamente"
+  },
+  "FORMULARIO_DENUNCIA": {
+    "TITLE": "Realizar denuncia",
+    "DESCRIPTION": "Descripción:",
+    "ANONYMOUS": "¿Deseas hacer esta denuncia anónima?",
+    "SUBMIT": "Enviar denuncia",
+    "SUCCESS": "Denuncia enviada correctamente"
+  },
+  "EVIDENCIA": {
+    "TITLE": "Adjuntar evidencia",
+    "ID": "ID de denuncia:",
+    "TYPE": "Tipo de evidencia:",
+    "TYPE_IMAGE": "Imagen",
+    "TYPE_VIDEO": "Video",
+    "TYPE_AUDIO": "Audio",
+    "URL": "URL de evidencia:",
+    "SUBMIT": "Subir evidencia",
+    "SUCCESS": "Evidencia subida correctamente"
+  },
+  "MIS_DENUNCIAS": {
+    "TITLE": "Mis denuncias",
+    "NO_RECORDS": "No tienes denuncias registradas.",
+    "COLUMNS": {
+      "DESCRIPTION": "Descripción",
+      "STATE": "Estado",
+      "DATE": "Fecha",
+      "EVIDENCE": "Evidencia"
+    },
+    "VIEW_FILE": "Ver archivo"
   }
 }
+
+
 

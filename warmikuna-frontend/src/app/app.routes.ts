@@ -1,21 +1,21 @@
 import { Routes } from '@angular/router';
-import { RegistroComponent }             from './auth/registro/registro.component';
-import { LoginComponent }                from './auth/login/login.component';
-import { DenunciaFormComponent }         from './denuncia/denuncia-form/denuncia-form.component';
-import { EvidenciaFormComponent }        from './denuncia/evidencia-form/evidencia-form.component';
-import { MisDenunciasComponent }         from './denuncia/mis-denuncias/mis-denuncias.component';
-import { redirectAuthenticatedGuard }    from './guards/redirect-authenticated.guard';
-import { RecuperarComponent }            from './auth/recuperar/recuperar.component';
-import { SettingsComponent }             from './settings/settings.component';
+import { LoginComponent }      from './auth/login/login.component';
+import { RegistroComponent }   from './auth/registro/registro.component';
+import { RecuperarComponent }  from './auth/recuperar/recuperar.component';
+import { DenunciaFormComponent }   from './denuncia/denuncia-form/denuncia-form.component';
+import { EvidenciaFormComponent }  from './denuncia/evidencia-form/evidencia-form.component';
+import { MisDenunciasComponent }   from './denuncia/mis-denuncias/mis-denuncias.component';
+import { redirectAuthenticatedGuard }
+  from './guards/redirect-authenticated.guard';
 
 export const routes: Routes = [
-  { path: 'login',        component: LoginComponent,       canActivate: [redirectAuthenticatedGuard] },
-  { path: 'registro',     component: RegistroComponent,     canActivate: [redirectAuthenticatedGuard] },
-  { path: 'denunciar',    component: DenunciaFormComponent },
-  { path: 'adjuntar',     component: EvidenciaFormComponent },
-  { path: 'mis-denuncias',component: MisDenunciasComponent },
-  { path: 'recuperar',    component: RecuperarComponent,    canActivate: [redirectAuthenticatedGuard] },
-  { path: 'settings',     component: SettingsComponent },
-  { path: '',             redirectTo: 'login', pathMatch: 'full' },
-  { path: '**',           redirectTo: 'login' }
+  { path: 'login',    component: LoginComponent,   canActivate:[redirectAuthenticatedGuard] },
+  { path: 'registro', component: RegistroComponent, canActivate:[redirectAuthenticatedGuard] },
+  { path: 'recuperar',component: RecuperarComponent,canActivate:[redirectAuthenticatedGuard] },
+  { path: 'denunciar',component: DenunciaFormComponent },
+  { path: 'adjuntar', component: EvidenciaFormComponent },
+  { path: 'mis-denuncias', component: MisDenunciasComponent },
+  { path: '', redirectTo: 'login', pathMatch:'full' },
+  { path: '**', redirectTo: 'login' }
 ];
+

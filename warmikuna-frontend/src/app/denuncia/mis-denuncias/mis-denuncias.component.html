@@ -1,35 +1,40 @@
 <div class="container mt-4">
-  <h2 class="mb-3">Mis Denuncias</h2>
+  <h2>{{ 'MIS_DENUNCIAS.TITLE' | translate }}</h2>
 
-  <div *ngIf="denuncias.length === 0" class="alert alert-info">
-    No tienes denuncias registradas.
-  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <table *ngIf="denuncias.length > 0" class="table table-bordered table-hover">
-    <thead class="table-light">
+  <p *ngIf="denuncias.length === 0 && !error">
+    {{ 'MIS_DENUNCIAS.NO_RECORDS' | translate }}
+  </p>
+
+  <table class="table" *ngIf="denuncias.length > 0">
+    <thead>
       <tr>
         <th>#</th>
-        <th>Descripción</th>
-        <th>Estado</th>
-        <th>Fecha</th>
-        <th>Evidencia</th>
+        <th>{{ 'MIS_DENUNCIAS.COLUMNS.DESCRIPTION' | translate }}</th>
+        <th>{{ 'MIS_DENUNCIAS.COLUMNS.STATE' | translate }}</th>
+        <th>{{ 'MIS_DENUNCIAS.COLUMNS.DATE' | translate }}</th>
+        <th>{{ 'MIS_DENUNCIAS.COLUMNS.EVIDENCE' | translate }}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let denuncia of denuncias; let i = index">
+      <tr *ngFor="let d of denuncias; let i = index">
         <td>{{ i + 1 }}</td>
-        <td>{{ denuncia.descripcion }}</td>
-        <td>{{ denuncia.estado }}</td>
-        <td>{{ denuncia.creada_en | date: 'short' }}</td>
+        <td>{{ d.descripcion }}</td>
+        <td>{{ d.estado }}</td>
+        <td>{{ d.creada_en | date:'short' }}</td>
         <td>
-          <a *ngIf="denuncia.evidenciaArchivo" 
-             href="http://localhost:3000/uploads/{{ denuncia.evidenciaArchivo }}" 
-             target="_blank">
-            Ver archivo
+          <a
+            *ngIf="d.evidenciaArchivo"
+            [href]="d.evidenciaArchivo"
+            target="_blank"
+          >
+            {{ 'MIS_DENUNCIAS.VIEW_FILE' | translate }}
           </a>
-          <span *ngIf="!denuncia.evidenciaArchivo">-</span>
+          <span *ngIf="!d.evidenciaArchivo">-</span>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
+

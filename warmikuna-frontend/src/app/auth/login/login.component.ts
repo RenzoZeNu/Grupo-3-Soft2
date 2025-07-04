@@ -1,51 +1,44 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { CommonModule }  from '@angular/common';
+import { FormsModule }   from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import {
+  TranslateModule,
+  TranslateService
+} from '@ngx-translate/core';
+import { AuthService, LoginResponse } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './login.component.html'
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  form: FormGroup;
-  mensaje: string = '';
+  correo = '';
+  contrasena = '';
+  mensaje?: string;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.form = this.fb.group({
-      correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', Validators.required],
-    });
-  }
+    private auth: AuthService,
+    private router: Router,
+    private translate: TranslateService
+  ) {}
 
   login() {
-    if (this.form.invalid) return;
-
-    this.authService.login(this.form.value).subscribe({
-      next: (res: any) => {
+    this.auth.login(this.correo, this.contrasena).subscribe({
+      next: (res: LoginResponse) => {
+        // 1) Guarda el token para futuras llamadas protegidas
         localStorage.setItem('token', res.token);
-        this.mensaje = 'Inicio de sesión exitoso';
-        this.router.navigate(['/denunciar']); 
+        // 2) Navega a la pantalla principal
+        this.router.navigate(['/denunciar']);
       },
-      error: (err) => {
-        this.mensaje = err.error?.error || 'Credenciales inválidas';
+      error: () => {
+        this.mensaje = this.translate.instant('LOGIN.ERROR');
       }
     });
   }
-
-  irARegistro() {
-    this.router.navigate(['/registro']);
-  }
-
-  irARecuperar() {
-  this.router.navigate(['/recuperar']);
-  }
-
 }
+
+

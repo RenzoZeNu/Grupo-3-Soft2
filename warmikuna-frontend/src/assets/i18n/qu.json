@@ -5,10 +5,62 @@
     "LOGOUT": "Qallariy"
   },
   "SETTINGS": {
-    "TITLE": "Ruraykuna",
-    "LANGUAGE": "Rimay",
-    "COLORBLIND": "Daltonimun munay",
-    "SAVE": "Allillanchiskay",
-    "SAVED": "Munakuy hamutuy"
+    "COLORBLIND": "Daltonimun munay"
+  },
+  "LOGIN": {
+    "TITLE": "Rikch'ariy",
+    "EMAIL": "Imaynataq qillqa:",
+    "PASSWORD": "Simi kuy:",
+    "SUBMIT": "Rikch'ariy",
+    "REGISTER": "Rikuychis",
+    "FORGOT": "Simita musuq?",
+    "ERROR": "Qillqa mana kutinchu"
+  },
+  "REGISTER": {
+    "TITLE": "Saphi upyay",
+    "NAME": "Suti:",
+    "EMAIL": "Qillqa:",
+    "PASSWORD": "Simi:",
+    "DNI": "DNI (8 punchaw):",
+    "SUBMIT": "Upyay",
+    "SUCCESS": "Upyay wasinanmi"
+  },
+  "RECOVER": {
+    "TITLE": "Simi kutiy",
+    "EMAIL": "Qillqa:",
+    "DNI": "DNI (8 punchaw):",
+    "NEW_PASSWORD": "Simi musuq:",
+    "SUBMIT": "Kuyaykuy",
+    "SUCCESS": "Simi kuyay wasinanmi"
+  },
+  "FORMULARIO_DENUNCIA": {
+    "TITLE": "Kamachiy rikuy",
+    "DESCRIPTION": "Rikcha:",
+    "ANONYMOUS": "Kay rikuypa sutinqa qhelqayta munanki?",
+    "SUBMIT": "Rikch'ariy",
+    "SUCCESS": "Rikuykuna wasinanmi"
+  },
+  "EVIDENCIA": {
+    "TITLE": "Riwy appendiy",
+    "ID": "Rikuy ID:",
+    "TYPE": "Riwy laya:",
+    "TYPE_IMAGE": "Riwy rikchi",
+    "TYPE_VIDEO": "Video",
+    "TYPE_AUDIO": "Audio",
+    "URL": "Riwy URL:",
+    "SUBMIT": "Appendiy",
+    "SUCCESS": "Riwy wasinanmi"
+  },
+  "MIS_DENUNCIAS": {
+    "TITLE": "Ñuqanchik rikuykuna",
+    "NO_RECORDS": "Mana rikuykichikchu",
+    "COLUMNS": {
+      "DESCRIPTION": "Rikcha",
+      "STATE": "Laya",
+      "DATE": "Punchaw",
+      "EVIDENCE": "Riwy"
+    },
+    "VIEW_FILE": "Riwy uñchay"
   }
 }
+

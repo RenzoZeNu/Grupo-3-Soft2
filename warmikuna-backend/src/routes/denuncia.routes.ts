@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { DenunciaController } from "../controllers/DenunciaController";
-import { authMiddleware } from "../middlewares/authMiddleware";
-import multer from "multer";
-import path from "path";
+import { Router }              from "express";
+import { DenunciaController }  from "../controllers/DenunciaController";
+import { authMiddleware }      from "../middlewares/authMiddleware";
+import multer                  from "multer";
+import path                    from "path";
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) =>
@@ -14,10 +14,14 @@ const upload = multer({ storage });
 
 const router = Router();
 
-// Registrar denuncia sin archivo
-router.post("/", authMiddleware, DenunciaController.crear);
+// HU-19: crear denuncia sin archivo
+router.post(
+  "/",
+  authMiddleware,
+  DenunciaController.crear
+);
 
-// Registrar denuncia con archivo
+// HU-19b: crear denuncia con archivo
 router.post(
   "/con-evidencia",
   authMiddleware,
@@ -25,10 +29,20 @@ router.post(
   DenunciaController.crearConArchivo
 );
 
-// Obtener denuncias del usuario
-router.get("/mis-denuncias", authMiddleware, DenunciaController.obtenerPorUsuario);
+// HU-19c: listar denuncias del usuario
+router.get(
+  "/mis-denuncias",
+  authMiddleware,
+  DenunciaController.obtenerPorUsuario
+);
 
-// Actualizar estado de denuncia
-router.put("/:id/estado", authMiddleware, DenunciaController.actualizarEstado);
+// HU-20: actualizar estado de denuncia
+router.put(
+  "/:id/estado",
+  authMiddleware,
+  DenunciaController.actualizarEstado
+);
 
 export default router;
+
+

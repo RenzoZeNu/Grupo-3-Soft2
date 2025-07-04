@@ -1,21 +1,28 @@
-import { Request, Response } from "express";
-import { denunciaService } from "../services/DenunciaService";
-import { enviarCorreo } from "../utils/emailService";
+import { Request, Response, NextFunction } from "express";
+import { denunciaService }                from "../services/DenunciaService";
+import { enviarCorreo }                   from "../utils/emailService";
 
 export class DenunciaController {
   /** HU-19 – Registrar denuncia y enviar confirmación por correo */
-  public static async crear(req: Request, res: Response): Promise<void> {
+  public static async crear(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { descripcion, anonima } = req.body;
       const correo = (req as any).usuario?.correo;
       if (!correo) {
         res.status(400).json({ error: "Correo no disponible" });
         return;
       }
+      const { descripcion, anonima } = req.body;
+      const denuncia = await denunciaService.crear(
+        correo,
+        descripcion,
+        !!anonima
+      );
 
-      const denuncia = await denunciaService.crear(correo, descripcion, !!anonima);
-
-      // Envío de correo
+      // envío de correo de confirmación
       try {
         await enviarCorreo(
           correo,
@@ -36,15 +43,18 @@ export class DenunciaController {
   }
 
   /** HU-19b – Registrar denuncia con archivo y enviar confirmación */
-  public static async crearConArchivo(req: Request, res: Response): Promise<void> {
+  public static async crearConArchivo(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { descripcion, anonima } = req.body;
       const correo = (req as any).usuario?.correo;
       if (!correo) {
         res.status(400).json({ error: "Correo no disponible" });
         return;
       }
-
+      const { descripcion, anonima } = req.body;
       const evidenciaArchivo = req.file?.filename ?? null;
       const denuncia = await denunciaService.crearConArchivo(
         correo,
@@ -53,7 +63,7 @@ export class DenunciaController {
         evidenciaArchivo
       );
 
-      // Envío de correo
+      // envío de correo de confirmación con evidencia
       try {
         await enviarCorreo(
           correo,
@@ -74,14 +84,17 @@ export class DenunciaController {
   }
 
   /** HU-19c – Obtener denuncias del usuario autenticado */
-  public static async obtenerPorUsuario(req: Request, res: Response): Promise<void> {
+  public static async obtenerPorUsuario(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const correo = (req as any).usuario?.correo;
       if (!correo) {
         res.status(400).json({ error: "Correo no disponible" });
         return;
       }
-
       const lista = await denunciaService.obtenerPorCorreo(correo);
       res.status(200).json(lista);
     } catch (err) {
@@ -91,7 +104,11 @@ export class DenunciaController {
   }
 
   /** HU-20 – Actualizar estado y notificar por correo */
-  public static async actualizarEstado(req: Request, res: Response): Promise<void> {
+  public static async actualizarEstado(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const id = Number(req.params.id);
       const { estado } = req.body;
@@ -104,7 +121,7 @@ export class DenunciaController {
 
       const actualizada = await denunciaService.actualizarEstado(id, estado);
 
-      // Envío de correo
+      // envío de correo de actualización de estado
       try {
         await enviarCorreo(
           denuncia.correo_usuario,
@@ -123,3 +140,5 @@ export class DenunciaController {
     }
   }
 }
+
+

@@ -1,42 +1,42 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { CommonModule }  from '@angular/common';
+import { FormsModule }   from '@angular/forms';
+import {
+  TranslateModule,
+  TranslateService
+} from '@ngx-translate/core';
+import { AuthService }    from '../../services/auth.service';
 
 @Component({
   selector: 'app-recuperar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './recuperar.component.html'
+  imports: [CommonModule, FormsModule, TranslateModule],
+  templateUrl: './recuperar.component.html',
+  styleUrls: ['./recuperar.component.css']
 })
 export class RecuperarComponent {
-  form: FormGroup;
+  correo = '';
+  dni = '';
+  nuevaContrasena = '';
+  mensaje?: string;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.form = this.fb.group({
-      correo: ['', [Validators.required, Validators.email]],
-      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
-      nuevaContrasena: ['', [Validators.required, Validators.minLength(6)]]
-    });
-  }
+    private auth: AuthService,
+    private translate: TranslateService
+  ) {}
 
-  recuperar() {
-    if (this.form.invalid) return;
-
-    this.authService.recuperarContrasena(this.form.value).subscribe({
-      next: () => {
-        window.alert('✅ Contraseña actualizada exitosamente');
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        console.error(err);
-        window.alert(err.error?.error || '❌ Error al recuperar contraseña');
-      }
-    });
+  recuperarContrasena() {
+    this.auth
+      .recuperar(this.correo, this.dni, this.nuevaContrasena)
+      .subscribe({
+        next: () => {
+          this.mensaje = this.translate.instant('RECOVER.SUCCESS');
+        },
+        error: err => {
+          this.mensaje = err.error?.message || err.message;
+        }
+      });
   }
 }
+
+
