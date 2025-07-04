@@ -1,3 +1,4 @@
+// warmikuna-backend/src/middlewares/authMiddleware.ts
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
@@ -27,10 +28,7 @@ export function authMiddleware(
     }
     (req as any).usuario = { id: payload.id, correo: payload.correo };
     next();
-  } catch (e) {
+  } catch (err) {
     res.status(401).json({ error: "Token inválido" });
   }
 }
-
-
-

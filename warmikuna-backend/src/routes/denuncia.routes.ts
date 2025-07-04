@@ -1,4 +1,3 @@
-// src/routes/denuncia.routes.ts
 import { Router } from "express";
 import { body } from "express-validator";
 import multer from "multer";
@@ -10,26 +9,29 @@ import { authMiddleware } from "../middlewares/authMiddleware";
 const storage = multer.diskStorage({
   destination: (_, __, cb) =>
     cb(null, path.resolve(__dirname, "../../uploads")),
-  filename: (_, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+  filename: (_, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
 });
 const upload = multer({ storage });
 
 const router = Router();
 
-// Crear sin archivo → POST /api/denuncias
+// GET /api/denuncias
+router.get("/", authMiddleware, DenunciaController.obtenerPorUsuario);
+
+// POST /api/denuncias
 router.post(
   "/",
   authMiddleware,
   body("descripcion")
     .isString()
     .withMessage("La descripción debe ser texto")
-    .isLength({ min: 10, max: 500 })
-    .withMessage("Debe tener entre 10 y 500 caracteres"),
-  body("anonima").isBoolean().withMessage("anonima debe ser booleano"),
+    .isLength({ min: 1, max: 500 })
+    .withMessage("La descripción debe tener entre 1 y 500 caracteres"),
+  body("anonima").optional().toBoolean(),
   DenunciaController.crear
 );
 
-// Crear con archivo → POST /api/denuncias/con-evidencia
+// POST /api/denuncias/con-evidencia
 router.post(
   "/con-evidencia",
   authMiddleware,
@@ -37,16 +39,13 @@ router.post(
   body("descripcion")
     .isString()
     .withMessage("La descripción debe ser texto")
-    .isLength({ min: 10, max: 500 })
-    .withMessage("Debe tener entre 10 y 500 caracteres"),
-  body("anonima").isBoolean().withMessage("anonima debe ser booleano"),
+    .isLength({ min: 1, max: 500 })
+    .withMessage("La descripción debe tener entre 1 y 500 caracteres"),
+  body("anonima").optional().toBoolean(),
   DenunciaController.crearConArchivo
 );
 
 export default router;
-
-
-
 
 
 

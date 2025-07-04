@@ -1,17 +1,36 @@
-// src/controllers/DenunciaController.ts
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import { denunciaService } from "../services/DenunciaService";
 import { enviarCorreo } from "../utils/emailService";
 
 export class DenunciaController {
+  /** GET /api/denuncias */
+  public static async obtenerPorUsuario(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const usuario = (req as any).usuario;
+      const correo = usuario?.correo as string | undefined;
+      if (!correo) {
+        res.status(401).json({ error: "No autenticado" });
+        return;
+      }
+      const lista = await denunciaService.obtenerPorCorreo(correo);
+      res.status(200).json(lista);
+    } catch (err) {
+      console.error("❌ obtenerPorUsuario:", err);
+      res.status(500).json({ error: "Error interno obteniendo denuncias" });
+    }
+  }
+
   /** POST /api/denuncias */
   public static async crear(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    // 1) Validación de body
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errores: errors.array() });
@@ -22,32 +41,24 @@ export class DenunciaController {
       const usuario = (req as any).usuario;
       const correo = usuario?.correo as string | undefined;
       if (!correo) {
-        res.status(401).json({ error: "No autenticado (falta correo en token)" });
+        res.status(401).json({ error: "No autenticado" });
         return;
       }
 
-      const { descripcion, anonima } = req.body;
-      const anonimaBool =
-        typeof anonima === "string"
-          ? anonima.toLowerCase() === "true"
-          : Boolean(anonima);
-
+      const { descripcion, anonima = false } = req.body;
       const denuncia = await denunciaService.crear(
         correo,
         descripcion,
-        anonimaBool
+        anonima
       );
 
-      // envío de correo (fire-and-forget)
       enviarCorreo(
         correo,
         "Confirmación de Registro de Denuncia",
-        `<p>Hola,</p>
-         <p>Tu denuncia fue registrada correctamente.</p>
-         <p><strong>ID:</strong> ${denuncia.id}</p>`
-      ).catch((err) => console.error("⚠️ Error enviando correo:", err));
+        `<p>Tu denuncia fue registrada.</p><p>ID: ${denuncia.id}</p>`
+      ).catch((e) => console.error(e));
 
-      res.status(201).json({ mensaje: "Denuncia creada", denuncia });
+      res.status(201).json(denuncia);
     } catch (err) {
       console.error("❌ crearDenuncia:", err);
       res.status(500).json({ error: "Error interno al crear denuncia" });
@@ -70,37 +81,26 @@ export class DenunciaController {
       const usuario = (req as any).usuario;
       const correo = usuario?.correo as string | undefined;
       if (!correo) {
-        res.status(401).json({ error: "No autenticado (falta correo en token)" });
+        res.status(401).json({ error: "No autenticado" });
         return;
       }
 
-      const { descripcion, anonima } = req.body;
+      const { descripcion, anonima = false } = req.body;
       const evidenciaArchivo = req.file?.filename ?? null;
-      const anonimaBool =
-        typeof anonima === "string"
-          ? anonima.toLowerCase() === "true"
-          : Boolean(anonima);
-
       const denuncia = await denunciaService.crearConArchivo(
         correo,
         descripcion,
-        anonimaBool,
+        anonima,
         evidenciaArchivo
       );
 
       enviarCorreo(
         correo,
-        "Confirmación de Denuncia (con evidencia)",
-        `<p>Hola,</p>
-         <p>Recibimos tu denuncia con evidencia.</p>
-         <p><strong>ID:</strong> ${denuncia.id}</p>`
-      ).catch((err) =>
-        console.error("⚠️ Error enviando correo (evidencia):", err)
-      );
+        "Confirmación de Denuncia con Evidencia",
+        `<p>Recibimos tu denuncia con evidencia.</p><p>ID: ${denuncia.id}</p>`
+      ).catch((e) => console.error(e));
 
-      res
-        .status(201)
-        .json({ mensaje: "Denuncia con archivo creada", denuncia });
+      res.status(201).json(denuncia);
     } catch (err) {
       console.error("❌ crearDenunciaConArchivo:", err);
       res
@@ -109,8 +109,4 @@ export class DenunciaController {
     }
   }
 }
-
-
-
-
 

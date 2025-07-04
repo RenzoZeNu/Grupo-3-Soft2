@@ -1,4 +1,3 @@
-// src/services/DenunciaService.ts
 import { Repository } from "typeorm";
 import { AppDataSource } from "../database/data-source";
 import { Denuncia } from "../entities/Denuncia";
@@ -42,11 +41,14 @@ export class DenunciaService {
     });
     return this.denunciaRepository.save(denuncia);
   }
+
+  async obtenerPorCorreo(correo: string): Promise<Denuncia[]> {
+    return this.denunciaRepository.find({
+      where: { correo_usuario: correo },
+      order: { creada_en: "DESC" },
+    });
+  }
 }
 
 export const denunciaService = new DenunciaService();
-
-
-
-
 

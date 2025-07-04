@@ -1,10 +1,4 @@
-// src/entities/Denuncia.ts
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
 
 @Entity("denuncias")
 export class Denuncia {
@@ -26,14 +20,10 @@ export class Denuncia {
   @Column({ type: "varchar", length: 255, nullable: true })
   evidenciaArchivo!: string | null;
 
-  // ← aquí forzamos VARCHAR(255)
-  @Column("varchar", {
-    name: "correo_usuario",
-    length: 255,
-    nullable: true,
-  })
+  @Column("varchar", { name: "correo_usuario", length: 255, nullable: true })
   correo_usuario!: string | null;
 }
+
 
 
 
