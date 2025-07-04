@@ -3,45 +3,94 @@ import { denunciaService } from "../services/DenunciaService";
 import { enviarCorreo } from "../utils/emailService";
 
 export class DenunciaController {
+  /** HU-19 – Registrar denuncia y enviar confirmación por correo */
   public static async crear(req: Request, res: Response): Promise<void> {
     try {
       const { descripcion, anonima } = req.body;
-      // En tu middleware de autenticación guardas el usuario en req.usuario
-      const correo = (req as any).usuario?.correo ?? req.body.correo_usuario;
-
+      const correo = (req as any).usuario?.correo;
       if (!correo) {
-        res.status(400).json({ error: "Correo no disponible en la solicitud" });
+        res.status(400).json({ error: "Correo no disponible" });
         return;
       }
 
-      /* Guarda la denuncia en BD */
-      const denuncia = await denunciaService.crear(
-        correo,
-        descripcion,
-        anonima === "true" || anonima === true
-      );
+      const denuncia = await denunciaService.crear(correo, descripcion, !!anonima);
 
-      /* Enviar correo de confirmación */
+      // Envío de correo
       try {
         await enviarCorreo(
           correo,
           "Confirmación de Registro de Denuncia",
           `<p>Hola,</p>
            <p>Tu denuncia fue registrada exitosamente.</p>
-           <p><strong>Código de denuncia:</strong> ${denuncia.id}</p>
-           <p>Gracias por confiar en Warmikuna.</p>`
+           <p><strong>ID:</strong> ${denuncia.id}</p>`
         );
-      } catch (mailErr) {
-        console.error("⚠️  Error enviando correo de confirmación:", mailErr);
+      } catch (e) {
+        console.error("⚠️ Error enviando correo de confirmación:", e);
       }
 
-      res.status(201).json({ mensaje: "Denuncia creada exitosamente", denuncia });
+      res.status(201).json({ mensaje: "Denuncia creada", denuncia });
     } catch (err) {
-      console.error("❌  Error al crear denuncia:", err);
+      console.error("❌ crearDenuncia:", err);
       res.status(500).json({ error: "Error interno al crear denuncia" });
     }
   }
 
+  /** HU-19b – Registrar denuncia con archivo y enviar confirmación */
+  public static async crearConArchivo(req: Request, res: Response): Promise<void> {
+    try {
+      const { descripcion, anonima } = req.body;
+      const correo = (req as any).usuario?.correo;
+      if (!correo) {
+        res.status(400).json({ error: "Correo no disponible" });
+        return;
+      }
+
+      const evidenciaArchivo = req.file?.filename ?? null;
+      const denuncia = await denunciaService.crearConArchivo(
+        correo,
+        descripcion,
+        !!anonima,
+        evidenciaArchivo
+      );
+
+      // Envío de correo
+      try {
+        await enviarCorreo(
+          correo,
+          "Confirmación de Registro de Denuncia (con evidencia)",
+          `<p>Hola,</p>
+           <p>Tu denuncia con evidencia fue registrada.</p>
+           <p><strong>ID:</strong> ${denuncia.id}</p>`
+        );
+      } catch (e) {
+        console.error("⚠️ Error enviando correo de confirmación (evidencia):", e);
+      }
+
+      res.status(201).json({ mensaje: "Denuncia con archivo creada", denuncia });
+    } catch (err) {
+      console.error("❌ crearDenunciaConArchivo:", err);
+      res.status(500).json({ error: "Error interno al crear denuncia con archivo" });
+    }
+  }
+
+  /** HU-19c – Obtener denuncias del usuario autenticado */
+  public static async obtenerPorUsuario(req: Request, res: Response): Promise<void> {
+    try {
+      const correo = (req as any).usuario?.correo;
+      if (!correo) {
+        res.status(400).json({ error: "Correo no disponible" });
+        return;
+      }
+
+      const lista = await denunciaService.obtenerPorCorreo(correo);
+      res.status(200).json(lista);
+    } catch (err) {
+      console.error("❌ obtenerPorUsuario:", err);
+      res.status(500).json({ error: "Error interno obteniendo denuncias" });
+    }
+  }
+
+  /** HU-20 – Actualizar estado y notificar por correo */
   public static async actualizarEstado(req: Request, res: Response): Promise<void> {
     try {
       const id = Number(req.params.id);
@@ -53,29 +102,24 @@ export class DenunciaController {
         return;
       }
 
-      const denunciaActualizada = await denunciaService.actualizarEstado(id, estado);
+      const actualizada = await denunciaService.actualizarEstado(id, estado);
 
-      /* Enviar correo de actualización de estado */
+      // Envío de correo
       try {
         await enviarCorreo(
           denuncia.correo_usuario,
-          "Actualización del Estado de tu Denuncia",
+          "Actualización de Estado de Denuncia",
           `<p>Hola,</p>
-           <p>El estado de tu denuncia <strong>${denuncia.id}</strong> se actualizó a: 
-           <strong>${estado}</strong>.</p>
-           <p>Gracias por usar Warmikuna.</p>`
+           <p>El estado de tu denuncia <strong>${id}</strong> es ahora: <strong>${estado}</strong>.</p>`
         );
-      } catch (mailErr) {
-        console.error("⚠️  Error enviando correo de actualización:", mailErr);
+      } catch (e) {
+        console.error("⚠️ Error enviando correo de estado:", e);
       }
 
-      res.status(200).json({
-        mensaje: "Estado actualizado correctamente",
-        denuncia: denunciaActualizada
-      });
+      res.status(200).json({ mensaje: "Estado actualizado", denuncia: actualizada });
     } catch (err) {
-      console.error("❌  Error al actualizar estado:", err);
-      res.status(500).json({ error: "Error interno al actualizar estado" });
+      console.error("❌ actualizarEstado:", err);
+      res.status(500).json({ error: "Error interno actualizando estado" });
     }
   }
 }

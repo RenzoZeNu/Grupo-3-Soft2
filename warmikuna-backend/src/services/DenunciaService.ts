@@ -2,19 +2,18 @@ import { AppDataSource } from "../database/data-source";
 import { Denuncia } from "../entities/Denuncia";
 
 class DenunciaService {
-  private denunciaRepository = AppDataSource.getRepository(Denuncia);
+  private repo = AppDataSource.getRepository(Denuncia);
 
-  /** Crea una denuncia sin archivo (HU-19) */
+  /** Crea una denuncia sin archivo */
   async crear(correo: string, descripcion: string, anonima: boolean) {
-    const denuncia = this.denunciaRepository.create({
+    const d = this.repo.create({
       descripcion,
       anonima,
       estado: "en revisión",
       creada_en: new Date(),
-      correo_usuario: correo
+      correo_usuario: correo,
     });
-
-    return this.denunciaRepository.save(denuncia);
+    return this.repo.save(d);
   }
 
   /** Crea una denuncia con archivo adjunto */
@@ -24,37 +23,36 @@ class DenunciaService {
     anonima: boolean,
     evidenciaArchivo: string | null
   ) {
-    const denuncia = this.denunciaRepository.create({
+    const d = this.repo.create({
       descripcion,
       anonima,
       estado: "en revisión",
       creada_en: new Date(),
       evidenciaArchivo: evidenciaArchivo ?? null,
-      correo_usuario: correo
+      correo_usuario: correo,
     });
-
-    return this.denunciaRepository.save(denuncia);
+    return this.repo.save(d);
   }
 
   /** Obtiene todas las denuncias de un usuario */
   async obtenerPorCorreo(correo: string) {
-    return this.denunciaRepository.find({
+    return this.repo.find({
       where: { correo_usuario: correo },
-      order: { creada_en: "DESC" }
+      order: { creada_en: "DESC" },
     });
   }
-  /** Busca una denuncia por su ID */
+
+  /** Busca una denuncia por su ID (HU-20) */
   async buscarPorId(id: number) {
-    return this.denunciaRepository.findOne({ where: { id } });
+    return this.repo.findOne({ where: { id } });
   }
 
-  /** Actualiza únicamente el estado de una denuncia */
+  /** Actualiza únicamente el estado de una denuncia (HU-20) */
   async actualizarEstado(id: number, nuevoEstado: string) {
-    const denuncia = await this.denunciaRepository.findOne({ where: { id } });
-    if (!denuncia) return null;
-
-    denuncia.estado = nuevoEstado;
-    return this.denunciaRepository.save(denuncia);
+    const d = await this.repo.findOne({ where: { id } });
+    if (!d) return null;
+    d.estado = nuevoEstado;
+    return this.repo.save(d);
   }
 }
 

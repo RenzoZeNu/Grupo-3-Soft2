@@ -1,42 +1,34 @@
-import { Router, Request } from "express";
+import { Router } from "express";
 import { DenunciaController } from "../controllers/DenunciaController";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import multer from "multer";
 import path from "path";
 
 const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, path.join(__dirname, "../../uploads"));
-  },
-  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
-  }
+  destination: (_req, _file, cb) =>
+    cb(null, path.join(__dirname, "../../uploads")),
+  filename: (_req, file, cb) =>
+    cb(null, `${Date.now()}-${file.originalname}`)
 });
-
 const upload = multer({ storage });
 
 const router = Router();
 
-// Denuncia sin archivo
-router.post("/", authMiddleware, DenunciaController.crear as any);
+// Registrar denuncia sin archivo
+router.post("/", authMiddleware, DenunciaController.crear);
 
-// Denuncia con archivo
+// Registrar denuncia con archivo
 router.post(
   "/con-evidencia",
   authMiddleware,
   upload.single("archivo"),
-  DenunciaController.crearConArchivo as any
+  DenunciaController.crearConArchivo
 );
 
-// Consultar denuncias por usuario
-router.get("/mis-denuncias", authMiddleware, DenunciaController.obtenerPorUsuario as any);
+// Obtener denuncias del usuario
+router.get("/mis-denuncias", authMiddleware, DenunciaController.obtenerPorUsuario);
 
-/* Registrar denuncia */
-router.post("/", DenunciaController.crear);
-
-/* Actualizar solo el estado de una denuncia */
-router.put("/:id/estado", DenunciaController.actualizarEstado);
+// Actualizar estado de denuncia
+router.put("/:id/estado", authMiddleware, DenunciaController.actualizarEstado);
 
 export default router;
-
