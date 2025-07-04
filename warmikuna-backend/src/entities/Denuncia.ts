@@ -1,3 +1,4 @@
+// src/entities/Denuncia.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,21 +14,27 @@ export class Denuncia {
   @Column("text")
   descripcion!: string;
 
-  @Column({ default: true })
+  @Column({ type: "boolean", default: true })
   anonima!: boolean;
 
-  @Column({ default: "en revisión" })
+  @Column({ type: "varchar", length: 50, default: "en revisión" })
   estado!: string;
 
   @CreateDateColumn({ name: "creada_en" })
   creada_en!: Date;
 
-  @Column({ nullable: true, type: 'varchar' })
+  @Column({ type: "varchar", length: 255, nullable: true })
   evidenciaArchivo!: string | null;
 
-
-  @Column()
-  correo_usuario!: string;
+  // ← aquí forzamos VARCHAR(255)
+  @Column("varchar", {
+    name: "correo_usuario",
+    length: 255,
+    nullable: true,
+  })
+  correo_usuario!: string | null;
 }
+
+
 
   

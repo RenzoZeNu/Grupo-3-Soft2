@@ -1,8 +1,14 @@
+// src/services/DenunciaService.ts
+import { Repository } from "typeorm";
 import { AppDataSource } from "../database/data-source";
-import { Denuncia }      from "../entities/Denuncia";
+import { Denuncia } from "../entities/Denuncia";
 
-class DenunciaService {
-  private denunciaRepository = AppDataSource.getRepository(Denuncia);
+export class DenunciaService {
+  private denunciaRepository: Repository<Denuncia>;
+
+  constructor() {
+    this.denunciaRepository = AppDataSource.getRepository(Denuncia);
+  }
 
   async crear(
     correo: string,
@@ -15,7 +21,7 @@ class DenunciaService {
       estado: "en revisión",
       creada_en: new Date(),
       evidenciaArchivo: null,
-      correo_usuario: correo,
+      correo_usuario: anonima ? null : correo,
     });
     return this.denunciaRepository.save(denuncia);
   }
@@ -32,32 +38,15 @@ class DenunciaService {
       estado: "en revisión",
       creada_en: new Date(),
       evidenciaArchivo,
-      correo_usuario: correo,
+      correo_usuario: anonima ? null : correo,
     });
-    return this.denunciaRepository.save(denuncia);
-  }
-
-  async obtenerPorCorreo(correo: string): Promise<Denuncia[]> {
-    return this.denunciaRepository.find({
-      where: { correo_usuario: correo },
-      order: { creada_en: "DESC" },
-    });
-  }
-
-  async buscarPorId(id: number): Promise<Denuncia | null> {
-    return this.denunciaRepository.findOneBy({ id });
-  }
-
-  async actualizarEstado(
-    id: number,
-    nuevoEstado: string
-  ): Promise<Denuncia> {
-    const denuncia = await this.buscarPorId(id);
-    if (!denuncia) throw new Error("Denuncia no encontrada");
-    denuncia.estado = nuevoEstado;
     return this.denunciaRepository.save(denuncia);
   }
 }
 
 export const denunciaService = new DenunciaService();
+
+
+
+
 
