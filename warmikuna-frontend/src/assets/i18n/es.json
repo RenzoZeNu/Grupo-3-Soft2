@@ -1,0 +1,12 @@
+{
+  "SETTINGS": {
+    "TITLE": "Ajustes",
+    "LANGUAGE": "Idioma",
+    "COLORBLIND": "Modo daltónico",
+    "SAVE": "Guardar",
+    "SAVED": "Preferencias guardadas"
+  },
+  "MENU": {
+    "SETTINGS": "Ajustes"
+  }
+}

@@ -6,6 +6,7 @@ import { EvidenciaFormComponent } from './denuncia/evidencia-form/evidencia-form
 import { MisDenunciasComponent } from './denuncia/mis-denuncias/mis-denuncias.component';
 import { redirectAuthenticatedGuard } from './guards/redirect-authenticated.guard';
 import { RecuperarComponent } from './auth/recuperar/recuperar.component';
+import { SettingsComponent } from './settings/settings.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [redirectAuthenticatedGuard] },
@@ -15,5 +16,8 @@ export const routes: Routes = [
   { path: 'mis-denuncias', component: MisDenunciasComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'recuperar', component: RecuperarComponent, canActivate: [redirectAuthenticatedGuard] },
+  { path: 'settings', component: SettingsComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
 ];
 

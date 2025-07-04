@@ -1,0 +1,19 @@
+<h2>{{ 'SETTINGS.TITLE' | translate }}</h2>
+
+<label>
+  {{ 'SETTINGS.LANGUAGE' | translate }}
+  <select [(ngModel)]="idioma">
+    <option value="es">Español</option>
+    <option value="qu">Quechua</option>
+    <option value="ay">Aimara</option>
+  </select>
+</label>
+
+<label>
+  <input type="checkbox" [(ngModel)]="modoDaltonico" />
+  {{ 'SETTINGS.COLORBLIND' | translate }}
+</label>
+
+<button (click)="guardar()">
+  {{ 'SETTINGS.SAVE' | translate }}
+</button>
