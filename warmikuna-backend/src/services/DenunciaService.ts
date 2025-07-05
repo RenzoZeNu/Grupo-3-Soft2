@@ -20,7 +20,8 @@ export class DenunciaService {
       estado: "en revisión",
       creada_en: new Date(),
       evidenciaArchivo: null,
-      correo_usuario: anonima ? null : correo,
+      // Guardamos siempre el correo para poder listar después
+      correo_usuario: correo,
     });
     return this.denunciaRepository.save(denuncia);
   }
@@ -37,7 +38,8 @@ export class DenunciaService {
       estado: "en revisión",
       creada_en: new Date(),
       evidenciaArchivo,
-      correo_usuario: anonima ? null : correo,
+      // Guardamos siempre el correo para poder listar después
+      correo_usuario: correo,
     });
     return this.denunciaRepository.save(denuncia);
   }
@@ -51,4 +53,5 @@ export class DenunciaService {
 }
 
 export const denunciaService = new DenunciaService();
+
 
