@@ -30,19 +30,20 @@ export class RegistroComponent {
   ) {}
 
   registrar() {
-    this.auth
-      .registrar(this.nombre, this.correo, this.contrasena, this.dni)
-      .subscribe({
-        next: () => {
-          // Muestra mensaje de éxito y redirige a login
-          this.mensaje = this.translate.instant('REGISTER.SUCCESS');
-          setTimeout(() => this.router.navigate(['/login']), 1500);
-        },
-        error: err => {
-          // Extrae mensaje del backend o usa el genérico
-          this.error = err.error?.message || err.message;
-        }
-      });
+  this.auth
+    .registrar(this.nombre, this.correo, this.contrasena, this.dni)
+    .subscribe({
+      next: () => {
+        this.mensaje = this.translate.instant('REGISTER.SUCCESS');
+        setTimeout(() => this.router.navigate(['/login']), 1500);
+      },
+      error: err => {
+        console.log('Error completo de respuesta:', err.error);
+        this.error = err.error?.errores 
+          ? err.error.errores.map((e: any) => e.msg).join(', ')
+          : err.error?.error || err.message;
+      }
+    });
   }
 }
 

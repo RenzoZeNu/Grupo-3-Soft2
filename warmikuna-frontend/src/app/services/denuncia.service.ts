@@ -1,5 +1,6 @@
+// warmikuna-frontend/src/app/services/denuncia.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Denuncia {
@@ -21,20 +22,28 @@ export class DenunciaService {
 
   constructor(private http: HttpClient) {}
 
-  crear(
-    descripcion: string,
-    anonima: boolean
-  ): Observable<Denuncia> {
+  /** Crea una nueva denuncia, enviando el JWT en el header */
+  crear(descripcion: string, anonima: boolean): Observable<Denuncia> {
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post<Denuncia>(
       this.base,
-      { descripcion, anonima }
+      { descripcion, anonima },
+      { headers }
     );
   }
 
+  /** Obtiene las denuncias del usuario autenticado */
   obtenerPorCorreo(): Observable<Denuncia[]> {
-    return this.http.get<Denuncia[]>(this.base);
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<Denuncia[]>(
+      this.base,
+      { headers }
+    );
   }
 }
+
 
 
 

@@ -1,3 +1,4 @@
+// warmikuna-backend/src/entities/Usuario.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,29 +11,25 @@ export class Usuario {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ length: 100 })
+  @Column()
   nombre!: string;
 
-  @Column({ length: 100, unique: true })
+  @Column({ unique: true })
   correo!: string;
 
   @Column()
-  contrasena!: string;
+  password!: string;
 
-  @Column({ length: 8, unique: true })
+  @Column({ length: 8 })
   dni!: string;
 
-  @Column({ name: "es_anonimo", type: "boolean", default: false })
-  esAnonimo!: boolean;
-
-  // Preferencias de idioma y modo daltónico
-  @Column({ type: "varchar", length: 5, default: "es" })
-  idioma!: string;
-
-  @Column({ type: "boolean", default: false })
-  modoDaltonico!: boolean;
+  @Column({ default: "user" })
+  rol!: "user" | "admin";
 
   @CreateDateColumn({ name: "creado_en" })
   creadoEn!: Date;
 }
+
+
+
 

@@ -1,15 +1,22 @@
 import "reflect-metadata";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 dotenv.config();
-import { AppDataSource } from "./database/data-source";
+
 import app from "./app";
+import { AppDataSource } from "./database/data-source";
+
+const PORT = process.env.PORT || 3000;
 
 AppDataSource.initialize()
   .then(() => {
-    console.log("✅ Conexión exitosa a MySQL");
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-    });
+    console.log("✅ Base de datos conectada");
+    app.listen(PORT, () =>
+      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
+    );
   })
-  .catch((error) => console.error("❌ Error en la conexión a la base de datos:", error));
+  .catch((err) => {
+    console.error("❌ Error conectando a la base de datos:", err);
+    process.exit(1);
+  });
+
+

@@ -1,102 +1,118 @@
+// warmikuna-backend/src/controllers/UsuarioController.ts
 import { Request, Response, NextFunction } from "express";
+import { validationResult } from "express-validator";
 import { usuarioService } from "../services/UsuarioService";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export class UsuarioController {
-  /** POST /api/usuarios/registrar */
+  // POST /api/usuarios/registrar
   static async registrar(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    try {
-      const { nombre, correo, contrasena, dni } = req.body;
-      if (!nombre || !correo || !contrasena || !dni) {
-        res.status(400).json({ mensaje: "Todos los campos son obligatorios" });
-        return;
-      }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errores: errors.array() });
+      return;
+    }
 
-      const usuario = await usuarioService.registrar(
+    try {
+      const { nombre, correo, password, dni } = req.body;
+      const hashed = await bcrypt.hash(password, 10);
+      const usuario = await usuarioService.crear({
         nombre,
         correo,
-        contrasena,
-        dni
-      );
-      res
-        .status(201)
-        .json({ mensaje: "Usuario registrado exitosamente", usuario });
+        password: hashed,
+        dni,
+      });
+      res.status(201).json({ id: usuario.id, correo: usuario.correo });
     } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      if (err.code === "ER_DUP_ENTRY") {
+        res.status(400).json({ error: "Correo ya registrado" });
+        return;
+      }
+      next(err);
     }
   }
 
-  /** POST /api/usuarios/login */
+  // POST /api/usuarios/login
   static async login(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log("Validación fallida:", errors.array());
+      res.status(400).json({ errores: errors.array() });
+      return;
+    }
+
     try {
-      const { correo, contrasena } = req.body;
-      if (!correo || !contrasena) {
-        res
-          .status(400)
-          .json({ mensaje: "Correo y contraseña son obligatorios" });
+      const { correo, password } = req.body;
+      const user = await usuarioService.buscarPorCorreo(correo);
+      if (!user) {
+        res.status(401).json({ error: "Credenciales inválidas" });
         return;
       }
 
-      const { token, usuario } = await usuarioService.login(correo, contrasena);
-      res.json({ mensaje: "Inicio de sesión exitoso", token, usuario });
-    } catch (err: any) {
-      res.status(401).json({ error: err.message });
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) {
+        res.status(401).json({ error: "Credenciales inválidas" });
+        return;
+      }
+
+      const secret = process.env.JWT_SECRET;
+      const expires = process.env.JWT_EXPIRES_IN || "1h";
+      if (!secret) {
+        next(new Error("JWT_SECRET no definido"));
+        return;
+      }
+
+      const token = jwt.sign(
+        { id: user.id, correo: user.correo, rol: user.rol },
+        secret,
+        { expiresIn: expires } as jwt.SignOptions
+      );
+
+      res.json({ token });
+    } catch (err) {
+      next(err);
     }
   }
 
-  /** POST /api/usuarios/recuperar */
-  static async recuperarContrasena(
+  // POST /api/usuarios/cambiar-contrasena
+  static async cambiarContrasena(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errores: errors.array() });
+      return;
+    }
+
     try {
-      const { correo, dni, nuevaContrasena } = req.body;
-      if (!correo || !dni || !nuevaContrasena) {
-        res
-          .status(400)
-          .json({ mensaje: "Todos los campos son obligatorios" });
+      const userId = (req as any).user.id as number;
+      const { oldPassword, newPassword } = req.body;
+      const user = await usuarioService.buscarPorId(userId);
+      const ok = await bcrypt.compare(oldPassword, user.password);
+      if (!ok) {
+        res.status(400).json({ error: "Contraseña actual incorrecta" });
         return;
       }
 
-      const result = await usuarioService.recuperarContrasena(
-        correo,
-        dni,
-        nuevaContrasena
-      );
-      res.json({ mensaje: "Contraseña actualizada correctamente", ...result });
-    } catch (err: any) {
-      res.status(400).json({ error: err.message });
-    }
-  }
-
-  /** PUT /api/usuarios/preferencias */
-  static async actualizarPreferencias(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const userId = (req as any).usuario.id as number;
-      const { idioma, modoDaltonico } = req.body;
-
-      const usuario = await usuarioService.actualizarPreferencias(
-        userId,
-        idioma,
-        Boolean(modoDaltonico)
-      );
-      res
-        .status(200)
-        .json({ mensaje: "Preferencias actualizadas", usuario });
-    } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      const hashed = await bcrypt.hash(newPassword, 10);
+      await usuarioService.actualizarPassword(userId, hashed);
+      res.json({ mensaje: "Contraseña actualizada" });
+    } catch (err) {
+      next(err);
     }
   }
 }
+
+
+
