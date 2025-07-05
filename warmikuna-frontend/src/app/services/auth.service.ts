@@ -1,7 +1,8 @@
-import { Injectable }             from '@angular/core';
-import { HttpClient }             from '@angular/common/http';
+// src/app/services/auth.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap }                    from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 export interface LoginResponse {
   token: string;
@@ -12,22 +13,24 @@ export interface LoginResponse {
 export class AuthService {
   private base = 'http://localhost:3000/api/usuarios';
   private _currentUser = new BehaviorSubject<LoginResponse['usuario'] | null>(null);
-  public currentUser$  = this._currentUser.asObservable();
+  public currentUser$ = this._currentUser.asObservable();
 
   constructor(private http: HttpClient) {
-    // Al iniciar, intenta recuperar usuario del localStorage
     const saved = localStorage.getItem('usuario');
     if (saved) {
-      this._currentUser.next(JSON.parse(saved));
+      try {
+        this._currentUser.next(JSON.parse(saved));
+      } catch {
+        localStorage.removeItem('usuario');
+      }
     }
   }
 
-  /** Devuelve el usuario actual (sin Observable) */
+  /** Getter para el guard */
   get currentUserValue(): LoginResponse['usuario'] | null {
     return this._currentUser.value;
   }
 
-  /** POST /login */
   login(correo: string, contrasena: string): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
@@ -43,7 +46,6 @@ export class AuthService {
       );
   }
 
-  /** POST /registrar */
   registrar(
     nombre: string,
     correo: string,
@@ -56,23 +58,18 @@ export class AuthService {
     );
   }
 
-  /** POST /recuperar */
-  recuperar(
-    correo: string,
-    dni: string,
-    nuevaContrasena: string
-  ): Observable<any> {
+  recuperar(correo: string, dni: string, nuevaContrasena: string): Observable<any> {
     return this.http.post(
-      `${this.base}/recuperar`,
+      `${this.base}/cambiar-contrasena`, // ajusta al endpoint real
       { correo, dni, newPassword: nuevaContrasena }
     );
   }
 
-  /** Elimina datos de sesión */
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     this._currentUser.next(null);
   }
 }
+
 

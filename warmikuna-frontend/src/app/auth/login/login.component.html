@@ -1,31 +1,17 @@
-<div class="container mt-4">
-  <h2>{{ 'LOGIN.TITLE' | translate }}</h2>
-  <form (ngSubmit)="login()">
-    <div class="mb-3">
-      <label for="correo">{{ 'LOGIN.EMAIL' | translate }}</label>
-      <input
-        id="correo"
-        class="form-control"
-        type="email"
-        [(ngModel)]="correo"
-        name="correo"
-        required />
-    </div>
-    <div class="mb-3">
-      <label for="contrasena">{{ 'LOGIN.PASSWORD' | translate }}</label>
-      <input
-        id="contrasena"
-        class="form-control"
-        type="password"
-        [(ngModel)]="contrasena"
-        name="contrasena"
-        required />
-    </div>
-    <button class="btn btn-primary">{{ 'LOGIN.SUBMIT' | translate }}</button>
-  </form>
-  <button class="btn btn-link" routerLink="/registro">{{ 'LOGIN.REGISTER' | translate }}</button>
-  <button class="btn btn-link" routerLink="/recuperar">{{ 'LOGIN.FORGOT' | translate }}</button>
-  <p *ngIf="mensaje" class="text-danger">{{ mensaje }}</p>
-</div>
+<!-- src/app/auth/login/login.component.html -->
+<h1>{{ 'LOGIN.TITLE' | translate }}</h1>
+<form (ngSubmit)="login()">
+  <div class="mb-3">
+    <label for="email">{{ 'LOGIN.EMAIL' | translate }}</label>
+    <input id="email" type="email" [(ngModel)]="correo" name="correo" required class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label for="pwd">{{ 'LOGIN.PASSWORD' | translate }}</label>
+    <input id="pwd" type="password" [(ngModel)]="contrasena" name="contrasena" required class="form-control" />
+  </div>
+  <button class="btn btn-primary" type="submit">{{ 'LOGIN.SUBMIT' | translate }}</button>
+  <div *ngIf="error" class="text-danger mt-2">{{ error }}</div>
+</form>
+
 
 

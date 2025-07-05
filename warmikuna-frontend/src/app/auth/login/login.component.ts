@@ -1,12 +1,10 @@
+// src/app/auth/login/login.component.ts
 import { Component } from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule }   from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import {
-  TranslateModule,
-  TranslateService
-} from '@ngx-translate/core';
-import { AuthService, LoginResponse } from '../../services/auth.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AuthService }   from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +16,7 @@ import { AuthService, LoginResponse } from '../../services/auth.service';
 export class LoginComponent {
   correo = '';
   contrasena = '';
-  mensaje?: string;
+  error?: string;
 
   constructor(
     private auth: AuthService,
@@ -28,17 +26,15 @@ export class LoginComponent {
 
   login() {
     this.auth.login(this.correo, this.contrasena).subscribe({
-      next: (res: LoginResponse) => {
-        // 1) Guarda el token para futuras llamadas protegidas
-        localStorage.setItem('token', res.token);
-        // 2) Navega a la pantalla principal
+      next: () => {
+        // Una vez logueado, redirige a la pantalla de usuario normal
         this.router.navigate(['/denunciar']);
       },
-      error: () => {
-        this.mensaje = this.translate.instant('LOGIN.ERROR');
+      error: err => {
+        // Muestra el mensaje de error traducido o genérico
+        this.error = err.error?.error || err.error?.message || err.message;
       }
     });
   }
 }
-
 

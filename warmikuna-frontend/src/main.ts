@@ -1,19 +1,14 @@
-// warmikuna-frontend/src/main.ts
+// src/main.ts
 import { importProvidersFrom, Provider } from '@angular/core';
-import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
-import {
-  provideHttpClient,
-  withInterceptorsFromDi,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
+import { bootstrapApplication }         from '@angular/platform-browser';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule }                  from '@angular/forms';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateHttpLoader }             from '@ngx-translate/http-loader';
 
-import { AppComponent } from './app/app.component';
-import { routes } from './app/app.routes';
+import { AppComponent }    from './app/app.component';
+import { AppRoutesModule } from './app/app-routes.module';     // <— tu nuevo módulo
 import { AuthInterceptor } from './app/core/auth.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -22,7 +17,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    // 1) Módulos básicos
+    // Módulos Angular
     importProvidersFrom(
       HttpClientModule,
       FormsModule,
@@ -31,24 +26,18 @@ bootstrapApplication(AppComponent, {
         loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,
-          deps: [HttpClient],
-        },
-      })
+          deps: [HttpClient]
+        }
+      }),
+      AppRoutesModule         // <— aquí
     ),
-
-    // 2) Rutas
-    provideRouter(routes),
-
-    // 3) HttpClient con interceptores recogidos de DI
+    // Clientes HTTP + interceptores
     provideHttpClient(withInterceptorsFromDi()),
-
-    // 4) Registro del AuthInterceptor como HTTP_INTERCEPTOR
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true,
-    } as Provider,
-  ],
+      multi: true
+    } as Provider
+  ]
 }).catch(err => console.error(err));
-
 
