@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule }   from '@angular/forms';
-import {
-  TranslateModule,
-  TranslateService
-} from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService }    from '../../services/auth.service';
 
 @Component({
@@ -19,6 +16,7 @@ export class RecuperarComponent {
   dni = '';
   nuevaContrasena = '';
   mensaje?: string;
+  error?: string;
 
   constructor(
     private auth: AuthService,
@@ -33,10 +31,11 @@ export class RecuperarComponent {
           this.mensaje = this.translate.instant('RECOVER.SUCCESS');
         },
         error: err => {
-          this.mensaje = err.error?.message || err.message;
+          this.error = err.error?.error || err.error?.message || err.message;
         }
       });
   }
 }
+
 
 

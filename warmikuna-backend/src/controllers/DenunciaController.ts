@@ -1,47 +1,26 @@
+// warmikuna-backend/src/controllers/DenunciaController.ts
 import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
-import { denunciaService } from "../services/DenunciaService";
-import { enviarCorreo } from "../utils/emailService";
+import { validationResult }                from "express-validator";
+import { denunciaService }                from "../services/DenunciaService";
+import { enviarCorreo }                   from "../utils/emailService";
 
 export class DenunciaController {
-  /** GET /api/denuncias */
-  public static async obtenerPorUsuario(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const usuario = (req as any).usuario;
-      const correo = usuario?.correo as string | undefined;
-      if (!correo) {
-        res.status(401).json({ error: "No autenticado" });
-        return;
-      }
-      const lista = await denunciaService.obtenerPorCorreo(correo);
-      res.status(200).json(lista);
-    } catch (err) {
-      console.error("❌ obtenerPorUsuario:", err);
-      res.status(500).json({ error: "Error interno obteniendo denuncias" });
-    }
-  }
-
   /** POST /api/denuncias */
   public static async crear(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({ errores: errors.array() });
-      return;
-    }
-
     try {
-      const usuario = (req as any).usuario;
-      const correo = usuario?.correo as string | undefined;
+      const correo = (req as any).user?.correo as string | undefined;
       if (!correo) {
-        res.status(401).json({ error: "No autenticado" });
+        res.status(400).json({ error: "Correo no disponible" });
+        return;
+      }
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errores: errors.array() });
         return;
       }
 
@@ -55,8 +34,8 @@ export class DenunciaController {
       enviarCorreo(
         correo,
         "Confirmación de Registro de Denuncia",
-        `<p>Tu denuncia fue registrada.</p><p>ID: ${denuncia.id}</p>`
-      ).catch((e) => console.error(e));
+        `<p>Hola,</p><p>Tu denuncia fue registrada exitosamente.</p><p><strong>ID:</strong> ${denuncia.id}</p>`
+      ).catch((e) => console.error("⚠️ Error enviando correo:", e));
 
       res.status(201).json(denuncia);
     } catch (err) {
@@ -71,17 +50,16 @@ export class DenunciaController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({ errores: errors.array() });
-      return;
-    }
-
     try {
-      const usuario = (req as any).usuario;
-      const correo = usuario?.correo as string | undefined;
+      const correo = (req as any).user?.correo as string | undefined;
       if (!correo) {
-        res.status(401).json({ error: "No autenticado" });
+        res.status(400).json({ error: "Correo no disponible" });
+        return;
+      }
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errores: errors.array() });
         return;
       }
 
@@ -97,8 +75,8 @@ export class DenunciaController {
       enviarCorreo(
         correo,
         "Confirmación de Denuncia con Evidencia",
-        `<p>Recibimos tu denuncia con evidencia.</p><p>ID: ${denuncia.id}</p>`
-      ).catch((e) => console.error(e));
+        `<p>Hola,</p><p>Tu denuncia con evidencia fue registrada exitosamente.</p><p><strong>ID:</strong> ${denuncia.id}</p>`
+      ).catch((e) => console.error("⚠️ Error enviando correo (evidencia):", e));
 
       res.status(201).json(denuncia);
     } catch (err) {
@@ -108,5 +86,26 @@ export class DenunciaController {
         .json({ error: "Error interno al crear denuncia con archivo" });
     }
   }
+
+  /** GET /api/denuncias */
+  public static async obtenerPorUsuario(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const correo = (req as any).user?.correo as string | undefined;
+      if (!correo) {
+        res.status(400).json({ error: "Correo no disponible" });
+        return;
+      }
+      const lista = await denunciaService.obtenerPorCorreo(correo);
+      res.status(200).json(lista);
+    } catch (err) {
+      console.error("❌ obtenerPorUsuario:", err);
+      res.status(500).json({ error: "Error interno obteniendo denuncias" });
+    }
+  }
 }
+
 

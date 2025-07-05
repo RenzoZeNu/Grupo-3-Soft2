@@ -1,24 +1,33 @@
-// warmikuna-frontend/src/app/services/auth.service.ts
-import { Injectable } from '@angular/core';
-import { HttpClient }   from '@angular/common/http';
-import { Observable }   from 'rxjs';
-import { tap }          from 'rxjs/operators';
+import { Injectable }             from '@angular/core';
+import { HttpClient }             from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap }                    from 'rxjs/operators';
 
 export interface LoginResponse {
   token: string;
-  usuario: any;
+  usuario: { id: number; correo: string; rol: string };
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  // Base URL apuntando a tu API de usuarios
   private base = 'http://localhost:3000/api/usuarios';
+  private _currentUser = new BehaviorSubject<LoginResponse['usuario'] | null>(null);
+  public currentUser$  = this._currentUser.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Al iniciar, intenta recuperar usuario del localStorage
+    const saved = localStorage.getItem('usuario');
+    if (saved) {
+      this._currentUser.next(JSON.parse(saved));
+    }
+  }
 
-  /** POST /api/usuarios/login */
+  /** Devuelve el usuario actual (sin Observable) */
+  get currentUserValue(): LoginResponse['usuario'] | null {
+    return this._currentUser.value;
+  }
+
+  /** POST /login */
   login(correo: string, contrasena: string): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
@@ -26,48 +35,44 @@ export class AuthService {
         { correo, password: contrasena }
       )
       .pipe(
-        tap((res: LoginResponse) => {
+        tap(res => {
           localStorage.setItem('token', res.token);
+          localStorage.setItem('usuario', JSON.stringify(res.usuario));
+          this._currentUser.next(res.usuario);
         })
       );
   }
 
-  /** POST /api/usuarios/registrar */
+  /** POST /registrar */
   registrar(
     nombre: string,
     correo: string,
     contrasena: string,
     dni: string
   ): Observable<any> {
-    // El backend espera { nombre, correo, password, dni }
     return this.http.post(
       `${this.base}/registrar`,
-      {
-        nombre,
-        correo,
-        password: contrasena,
-        dni
-      }
+      { nombre, correo, password: contrasena, dni }
     );
   }
 
-  /** POST /api/usuarios/recuperar */
+  /** POST /recuperar */
   recuperar(
     correo: string,
     dni: string,
     nuevaContrasena: string
   ): Observable<any> {
-    // Ajusta según tu endpoint de recuperar
     return this.http.post(
       `${this.base}/recuperar`,
-      {
-        correo,
-        dni,
-        newPassword: nuevaContrasena
-      }
+      { correo, dni, newPassword: nuevaContrasena }
     );
   }
+
+  /** Elimina datos de sesión */
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    this._currentUser.next(null);
+  }
 }
-
-
 

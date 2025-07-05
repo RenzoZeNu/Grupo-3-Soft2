@@ -14,7 +14,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
-import { AuthInterceptor } from './app/auth.interceptor';
+import { AuthInterceptor } from './app/core/auth.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -22,7 +22,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    // 1) Módulos importados para Forms, HttpClient y Translate
+    // 1) Módulos básicos
     importProvidersFrom(
       HttpClientModule,
       FormsModule,
@@ -39,16 +39,16 @@ bootstrapApplication(AppComponent, {
     // 2) Rutas
     provideRouter(routes),
 
-    // 3) HTTP client con interceptors desde DI
+    // 3) HttpClient con interceptores recogidos de DI
     provideHttpClient(withInterceptorsFromDi()),
 
-    // 4) Registro explícito de tu AuthInterceptor
+    // 4) Registro del AuthInterceptor como HTTP_INTERCEPTOR
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     } as Provider,
   ],
-}).catch((err) => console.error(err));
+}).catch(err => console.error(err));
 
 

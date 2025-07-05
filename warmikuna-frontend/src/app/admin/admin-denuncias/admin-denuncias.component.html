@@ -1,0 +1,10 @@
+<h2>Gestión de Denuncias</h2>
+<ul>
+  <li *ngFor="let d of denuncias">
+    {{ d.descripcion }} — Estado: <strong>{{ d.estado }}</strong>
+    <button (click)="cambiarEstado(d.id, 'pendiente')">Pendiente</button>
+    <button (click)="cambiarEstado(d.id, 'en revisión')">En revisión</button>
+    <button (click)="cambiarEstado(d.id, 'cerrada')">Cerrar</button>
+  </li>
+</ul>
+
