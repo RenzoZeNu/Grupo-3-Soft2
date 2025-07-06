@@ -11,15 +11,15 @@ import { DenunciaFormComponent }  from './denuncia/denuncia-form/denuncia-form.c
 import { EvidenciaFormComponent } from './denuncia/evidencia-form/evidencia-form.component';
 import { MisDenunciasComponent }   from './denuncia/mis-denuncias/mis-denuncias.component';
 
-// ✏️ RUTAS ADMIN
-import { AdminHomeComponent }      from './admin/admin-home/admin‐home.component';
-import { AdminDenunciasComponent } from './admin/admin-denuncias/admin‐denuncias.component';
-import { AdminUsuariosComponent }  from './admin/admin-usuarios/admin‐usuarios.component';
-
 // ✏️ GUARDS
 import { redirectAuthenticatedGuard } from './guards/redirect-authenticated.guard';
 import { AuthGuard }                  from './guards/auth.guard';
 import { AdminGuard }                 from './guards/admin.guard';
+
+// ✏️ RUTAS ADMIN
+import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
+import { AdminDenunciasComponent } from './admin/admin-denuncias/admin-denuncias.component';
+import { AdminUsuariosComponent } from './admin/admin-usuarios/admin-usuarios.component';
 
 export const routes: Routes = [
   // públicas
@@ -46,5 +46,6 @@ export const routes: Routes = [
   // redirect base y wildcard
   { path: '',   redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },
+  { path: 'test', component: LoginComponent }
 ];
 

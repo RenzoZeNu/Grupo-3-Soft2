@@ -25,16 +25,18 @@ export class LoginComponent {
   ) {}
 
   login() {
-    this.auth.login(this.correo, this.contrasena).subscribe({
-      next: () => {
-        // Una vez logueado, redirige a la pantalla de usuario normal
-        this.router.navigate(['/denunciar']);
-      },
-      error: err => {
-        // Muestra el mensaje de error traducido o genérico
-        this.error = err.error?.error || err.error?.message || err.message;
-      }
-    });
-  }
+  console.log('Intentando login', this.correo, this.contrasena);
+  this.auth.login(this.correo, this.contrasena).subscribe({
+    next: () => {
+      console.log('Login OK');
+      this.router.navigate(['/denunciar']);
+    },
+    error: err => {
+      console.error('Error login', err);
+      this.error = err.error?.error || err.error?.message || err.message;
+    }
+  });
+}
+
 }
 

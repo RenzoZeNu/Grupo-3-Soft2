@@ -1,14 +1,13 @@
-// src/main.ts
 import { importProvidersFrom, Provider } from '@angular/core';
-import { bootstrapApplication }         from '@angular/platform-browser';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { FormsModule }                  from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader }             from '@ngx-translate/http-loader';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { AppComponent }    from './app/app.component';
-import { AppRoutesModule } from './app/app-routes.module';     // <— tu nuevo módulo
+import { AppComponent } from './app/app.component';
+import { AppRoutesModule } from './app/app-routes.module';
 import { AuthInterceptor } from './app/core/auth.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -17,7 +16,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    // Módulos Angular
     importProvidersFrom(
       HttpClientModule,
       FormsModule,
@@ -29,9 +27,8 @@ bootstrapApplication(AppComponent, {
           deps: [HttpClient]
         }
       }),
-      AppRoutesModule         // <— aquí
+      AppRoutesModule
     ),
-    // Clientes HTTP + interceptores
     provideHttpClient(withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,
@@ -40,4 +37,3 @@ bootstrapApplication(AppComponent, {
     } as Provider
   ]
 }).catch(err => console.error(err));
-

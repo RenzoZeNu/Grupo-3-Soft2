@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { CommonModule }           from '@angular/common';
-import { FormsModule }            from '@angular/forms';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   TranslateModule,
   TranslateService
 } from '@ngx-translate/core';
-import { PreferenciasService, Preferencias }
-  from './services/preferencias.service';
+import { PreferenciasService } from './services/preferencias.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +14,7 @@ import { PreferenciasService, Preferencias }
   imports: [
     CommonModule,
     RouterModule,
+    RouterOutlet,       // ← ✅ Este es el fix que te falta
     FormsModule,
     TranslateModule
   ],
@@ -22,7 +22,7 @@ import { PreferenciasService, Preferencias }
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  idioma: 'es'|'qu'|'ay'|'en' = 'es';
+  idioma: 'es' | 'qu' | 'ay' | 'en' = 'es';
   modoDaltonico = false;
 
   constructor(
@@ -32,16 +32,19 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.translate.addLangs(['es','qu','ay','en']);
+    this.translate.addLangs(['es', 'qu', 'ay', 'en']);
     this.translate.setDefaultLang('es');
     const saved = localStorage.getItem('idioma') as any;
     this.idioma = saved || this.translate.getDefaultLang();
     this.translate.use(this.idioma);
-    this.modoDaltonico = localStorage.getItem('modoDaltonico')==='true';
-    document.body.classList[this.modoDaltonico?'add':'remove']('color-blind');
+    this.modoDaltonico = localStorage.getItem('modoDaltonico') === 'true';
+    document.body.classList[this.modoDaltonico ? 'add' : 'remove']('color-blind');
   }
 
-  isLoggedIn() { return !!localStorage.getItem('token'); }
+  isLoggedIn() {
+    return !!localStorage.getItem('token');
+  }
+
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
@@ -50,14 +53,13 @@ export class AppComponent implements OnInit {
   onIdiomaChange() {
     this.translate.use(this.idioma);
     localStorage.setItem('idioma', this.idioma);
-    this.prefs.actualizar({ idioma: this.idioma, modoDaltonico: this.modoDaltonico })
-      .subscribe();
+    this.prefs.actualizar({ idioma: this.idioma, modoDaltonico: this.modoDaltonico }).subscribe();
   }
+
   onModoDaltonicoChange() {
-    document.body.classList[this.modoDaltonico?'add':'remove']('color-blind');
+    document.body.classList[this.modoDaltonico ? 'add' : 'remove']('color-blind');
     localStorage.setItem('modoDaltonico', String(this.modoDaltonico));
-    this.prefs.actualizar({ idioma: this.idioma, modoDaltonico: this.modoDaltonico })
-      .subscribe();
+    this.prefs.actualizar({ idioma: this.idioma, modoDaltonico: this.modoDaltonico }).subscribe();
   }
 }
 

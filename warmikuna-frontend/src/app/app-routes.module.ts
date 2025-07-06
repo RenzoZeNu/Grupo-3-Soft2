@@ -12,15 +12,15 @@ import { DenunciaFormComponent }  from './denuncia/denuncia-form/denuncia-form.c
 import { EvidenciaFormComponent } from './denuncia/evidencia-form/evidencia-form.component';
 import { MisDenunciasComponent }  from './denuncia/mis-denuncias/mis-denuncias.component';
 
-// --- Componentes de admin (standalone) ---
-import { AdminHomeComponent }      from './admin/admin-home/admin‐home.component';
-import { AdminDenunciasComponent } from './admin/admin-denuncias/admin‐denuncias.component';
-import { AdminUsuariosComponent }  from './admin/admin-usuarios/admin‐usuarios.component';
-
 // --- Guards (standalone functions) ---
 import { redirectAuthenticatedGuard } from './guards/redirect-authenticated.guard';
 import { AuthGuard }                  from './guards/auth.guard';
 import { AdminGuard }                 from './guards/admin.guard';
+
+// --- Componentes de admin (standalone) ---
+import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
+import { AdminDenunciasComponent } from './admin/admin-denuncias/admin-denuncias.component';
+import { AdminUsuariosComponent } from './admin/admin-usuarios/admin-usuarios.component';
 
 const routes: Routes = [
   // Auth
