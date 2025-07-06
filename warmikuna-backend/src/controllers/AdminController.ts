@@ -1,4 +1,5 @@
-// warmikuna-backend/src/controllers/AdminController.ts
+// File: warmikuna-backend/src/controllers/AdminController.ts
+
 import { Request, Response, NextFunction } from "express";
 import { denunciaService } from "../services/DenunciaService";
 import { usuarioService } from "../services/UsuarioService";
@@ -11,24 +12,34 @@ export class AdminController {
     next: NextFunction
   ): Promise<void> {
     try {
+      const user = (req as any).user;
+      if (!user || user.rol !== "admin") {
+        res.status(403).json({ error: "No autorizado" });
+        return;
+      }
       const lista = await denunciaService.obtenerTodas();
-      res.json(lista);
+      res.status(200).json(lista);
     } catch (err) {
       next(err);
     }
   }
 
-  // PUT  /api/admin/denuncias/:id/estado
+  // PATCH /api/admin/denuncias/:id/estado
   public static async cambiarEstado(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
+      const user = (req as any).user;
+      if (!user || user.rol !== "admin") {
+        res.status(403).json({ error: "No autorizado" });
+        return;
+      }
       const id = Number(req.params.id);
-      const { estado } = req.body;
+      const { estado } = req.body as { estado: string };
       const updated = await denunciaService.actualizarEstado(id, estado);
-      res.json(updated);
+      res.status(200).json(updated);
     } catch (err) {
       next(err);
     }
@@ -41,8 +52,13 @@ export class AdminController {
     next: NextFunction
   ): Promise<void> {
     try {
+      const user = (req as any).user;
+      if (!user || user.rol !== "admin") {
+        res.status(403).json({ error: "No autorizado" });
+        return;
+      }
       const lista = await usuarioService.obtenerTodos();
-      res.json(lista);
+      res.status(200).json(lista);
     } catch (err) {
       next(err);
     }
@@ -55,10 +71,15 @@ export class AdminController {
     next: NextFunction
   ): Promise<void> {
     try {
+      const user = (req as any).user;
+      if (!user || user.rol !== "admin") {
+        res.status(403).json({ error: "No autorizado" });
+        return;
+      }
       const id = Number(req.params.id);
       const { rol } = req.body as { rol: "user" | "admin" };
       const updated = await usuarioService.actualizarRol(id, rol);
-      res.json(updated);
+      res.status(200).json(updated);
     } catch (err) {
       next(err);
     }
@@ -71,6 +92,11 @@ export class AdminController {
     next: NextFunction
   ): Promise<void> {
     try {
+      const user = (req as any).user;
+      if (!user || user.rol !== "admin") {
+        res.status(403).json({ error: "No autorizado" });
+        return;
+      }
       const id = Number(req.params.id);
       await usuarioService.eliminar(id);
       res.sendStatus(204);
@@ -79,4 +105,3 @@ export class AdminController {
     }
   }
 }
-

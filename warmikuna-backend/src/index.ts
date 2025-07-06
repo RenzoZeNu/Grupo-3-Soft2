@@ -5,18 +5,21 @@ dotenv.config();
 import app from "./app";
 import { AppDataSource } from "./database/data-source";
 
-const PORT = process.env.PORT || 3000;
+// 1) Exportamos el express app para los tests
+export default app;
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log("✅ Base de datos conectada");
-    app.listen(PORT, () =>
-      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
-    );
-  })
-  .catch((err) => {
-    console.error("❌ Error conectando a la base de datos:", err);
-    process.exit(1);
-  });
-
-
+// 2) Solo inicializamos DB y arrancamos el listener si se ejecuta este fichero directamente
+if (require.main === module) {
+  AppDataSource.initialize()
+    .then(() => {
+      console.log("✅ Base de datos conectada");
+      const PORT = process.env.PORT || 3000;
+      app.listen(PORT, () =>
+        console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
+      );
+    })
+    .catch((err) => {
+      console.error("❌ Error conectando a la base de datos:", err);
+      process.exit(1);
+    });
+}

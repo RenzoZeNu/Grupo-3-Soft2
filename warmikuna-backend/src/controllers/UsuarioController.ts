@@ -1,13 +1,11 @@
-// File: warmikuna-backend/src/controllers/UsuarioController.ts
-
 import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
-import { usuarioService } from "../services/UsuarioService";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { validationResult }                from "express-validator";
+import { usuarioService }                  from "../services/UsuarioService";
+import bcrypt                              from "bcrypt";
+import jwt, { Secret, SignOptions }        from "jsonwebtoken";
 
 export class UsuarioController {
-  // POST /api/usuarios/registrar
+  /** POST /api/usuarios/registrar */
   static async registrar(
     req: Request,
     res: Response,
@@ -18,6 +16,7 @@ export class UsuarioController {
       res.status(400).json({ errores: errors.array() });
       return;
     }
+
     try {
       const { nombre, correo, password, dni } = req.body;
       const hashed = await bcrypt.hash(password, 10);
@@ -27,7 +26,11 @@ export class UsuarioController {
         password: hashed,
         dni,
       });
-      res.status(201).json({ id: usuario.id, correo: usuario.correo, rol: usuario.rol });
+      res.status(201).json({
+        id: usuario.id,
+        correo: usuario.correo,
+        rol: usuario.rol
+      });
     } catch (err: any) {
       if (err.code === "ER_DUP_ENTRY") {
         res.status(400).json({ error: "Correo ya registrado" });
@@ -37,7 +40,7 @@ export class UsuarioController {
     }
   }
 
-  // POST /api/usuarios/login
+  /** POST /api/usuarios/login */
   static async login(
     req: Request,
     res: Response,
@@ -48,6 +51,7 @@ export class UsuarioController {
       res.status(400).json({ errores: errors.array() });
       return;
     }
+
     try {
       const { correo, password } = req.body;
       const user = await usuarioService.buscarPorCorreo(correo);
@@ -55,32 +59,39 @@ export class UsuarioController {
         res.status(401).json({ error: "Credenciales inválidas" });
         return;
       }
+
       const valid = await bcrypt.compare(password, user.password);
       if (!valid) {
         res.status(401).json({ error: "Credenciales inválidas" });
         return;
       }
-      const secret = process.env.JWT_SECRET!;
-      const expires = process.env.JWT_EXPIRES_IN || "1h";
+
+      const secret: Secret = process.env.JWT_SECRET!;
+      // <-- aquí hacemos el “type assertion” en vez de annotar la variable
+      const options = {
+        expiresIn: process.env.JWT_EXPIRES_IN || "1h"
+      } as SignOptions;
+
       const token = jwt.sign(
         { id: user.id, correo: user.correo, rol: user.rol },
         secret,
-        { expiresIn: expires }
+        options
       );
+
       res.json({
         token,
         usuario: {
           id: user.id,
           correo: user.correo,
-          rol: user.rol,
-        },
+          rol: user.rol
+        }
       });
     } catch (err) {
       next(err);
     }
   }
 
-  // POST /api/usuarios/cambiar-contrasena
+  /** POST /api/usuarios/cambiar-contrasena */
   static async cambiarContrasena(
     req: Request,
     res: Response,
@@ -91,6 +102,7 @@ export class UsuarioController {
       res.status(400).json({ errores: errors.array() });
       return;
     }
+
     try {
       const { correo, dni, password } = req.body;
       const user = await usuarioService.buscarPorCorreo(correo);
@@ -102,6 +114,7 @@ export class UsuarioController {
         res.status(400).json({ error: "DNI incorrecto" });
         return;
       }
+
       const hashed = await bcrypt.hash(password, 10);
       await usuarioService.actualizarPassword(user.id, hashed);
       res.json({ mensaje: "Contraseña actualizada correctamente" });
@@ -110,7 +123,7 @@ export class UsuarioController {
     }
   }
 
-  // HU-16a – Listar todos los usuarios (solo admin)
+  /** HU-16a – Listar todos los usuarios (solo admin) */
   static async obtenerTodos(
     req: Request,
     res: Response,
@@ -130,7 +143,7 @@ export class UsuarioController {
     }
   }
 
-  // HU-16d – Eliminar usuario (solo admin)
+  /** HU-16d – Eliminar usuario (solo admin) */
   static async eliminarUsuario(
     req: Request,
     res: Response,

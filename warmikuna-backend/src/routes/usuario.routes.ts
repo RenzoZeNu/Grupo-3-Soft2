@@ -1,13 +1,13 @@
-// File: warmikuna-backend/src/routes/usuario.routes.ts
-
-import { Router } from "express";
-import { body } from "express-validator";
-import { UsuarioController } from "../controllers/UsuarioController";
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { Router }               from "express";
+import { body }                 from "express-validator";
+import { UsuarioController }    from "../controllers/UsuarioController";
+import { authMiddleware }       from "../middlewares/authMiddleware";
 
 const router = Router();
 
-// Rutas públicas
+// ── RUTAS PÚBLICAS ──
+
+// Registro de usuario
 router.post(
   "/registrar",
   body("nombre").isString().withMessage("Nombre obligatorio"),
@@ -23,6 +23,7 @@ router.post(
   UsuarioController.registrar
 );
 
+// Login
 router.post(
   "/login",
   body("correo").isEmail().withMessage("Email inválido"),
@@ -30,6 +31,7 @@ router.post(
   UsuarioController.login
 );
 
+// Recuperar / Cambiar contraseña
 router.post(
   "/cambiar-contrasena",
   body("correo").isEmail().withMessage("Email inválido"),
@@ -44,13 +46,14 @@ router.post(
   UsuarioController.cambiarContrasena
 );
 
-// Middleware de autenticación para las siguientes rutas
+// ── RUTAS PROTEGIDAS (requieren JWT) ──
 router.use(authMiddleware);
 
-// HU-16a – Listar todos los usuarios (solo admin)
+// Listar todos los usuarios (solo admin)
 router.get("/", UsuarioController.obtenerTodos);
 
-// HU-16d – Eliminar usuario (solo admin)
+// Eliminar usuario (solo admin)
 router.delete("/:id", UsuarioController.eliminarUsuario);
 
 export default router;
+
