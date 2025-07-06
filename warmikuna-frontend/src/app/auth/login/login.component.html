@@ -1,17 +1,34 @@
-<!-- src/app/auth/login/login.component.html -->
 <h1>{{ 'LOGIN.TITLE' | translate }}</h1>
 <form (ngSubmit)="login()">
   <div class="mb-3">
     <label for="email">{{ 'LOGIN.EMAIL' | translate }}</label>
-    <input id="email" type="email" [(ngModel)]="correo" name="correo" required class="form-control" />
+    <input
+      id="email"
+      type="email"
+      [(ngModel)]="correo"
+      name="correo"
+      required
+      class="form-control"
+    />
   </div>
   <div class="mb-3">
     <label for="pwd">{{ 'LOGIN.PASSWORD' | translate }}</label>
-    <input id="pwd" type="password" [(ngModel)]="contrasena" name="contrasena" required class="form-control" />
+    <input id="pwd"
+           type="password"
+           [(ngModel)]="contrasena"
+           name="contrasena"
+           required
+           class="form-control" />
   </div>
-  <button class="btn btn-primary" type="submit">{{ 'LOGIN.SUBMIT' | translate }}</button>
+
+  <!-- ✏️ Links restaurados -->
+  <div class="mt-2">
+    <a routerLink="/recuperar">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
+    &nbsp;|&nbsp;
+    <a routerLink="/registro">{{ 'LOGIN.SIGNUP' | translate }}</a>
+  </div>
+  <button class="btn btn-primary" type="submit">
+    {{ 'LOGIN.SUBMIT' | translate }}
+  </button>
   <div *ngIf="error" class="text-danger mt-2">{{ error }}</div>
 </form>
-
-
-
