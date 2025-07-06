@@ -1,10 +1,47 @@
 <h2>Gestión de Denuncias</h2>
-<ul>
-  <li *ngFor="let d of denuncias">
-    {{ d.descripcion }} — Estado: <strong>{{ d.estado }}</strong>
-    <button (click)="cambiarEstado(d.id, 'pendiente')">Pendiente</button>
-    <button (click)="cambiarEstado(d.id, 'en revisión')">En revisión</button>
-    <button (click)="cambiarEstado(d.id, 'cerrada')">Cerrar</button>
-  </li>
-</ul>
 
+<label>
+  Filtrar por correo o descripción:
+  <input
+    type="text"
+    [(ngModel)]="filterTerm"
+    placeholder="Filtrar..."
+  />
+</label>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Usuario (correo)</th>
+      <th>Descripción</th>
+      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Acción</th>      <!-- Nueva columna para el botón -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let d of filteredDenuncias">
+      <td>{{ d.id }}</td>
+      <td>{{ d.correo_usuario }}</td>
+      <td>{{ d.descripcion }}</td>
+      <td>{{ d.creada_en | date:'short' }}</td>
+      <td>
+        <!-- Dos-way binding para mantener el valor en memoria -->
+        <select [(ngModel)]="d.estado">
+          <option value="pendiente">Pendiente</option>
+          <option value="en revisión">En revisión</option>
+          <option value="cerrada">Cerrada</option>
+        </select>
+      </td>
+      <td>
+        <button
+          class="btn btn-primary btn-sm"
+          (click)="guardarEstado(d)"
+        >
+          Guardar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,5 +1,11 @@
 <h1>Panel de Administración</h1>
+
 <nav>
-  <a routerLink="denuncias">Ver denuncias</a> |
-  <a routerLink="usuarios">Gestionar usuarios</a>
+  <a routerLink="denuncias" routerLinkActive="active">Ver denuncias</a> |
+  <a routerLink="usuarios"  routerLinkActive="active">Gestionar usuarios</a>
 </nav>
+
+<hr/>
+
+<!-- Aquí se renderizan AdminDenunciasComponent y AdminUsuariosComponent -->
+<router-outlet></router-outlet>

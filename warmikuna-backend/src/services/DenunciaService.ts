@@ -54,7 +54,9 @@ export class DenunciaService {
 
   // HU-14 – listar todas las denuncias (admin)
   async obtenerTodas(): Promise<Denuncia[]> {
-    return this.repo.find({ order: { creada_en: "DESC" } });
+    return this.repo.find({
+      order: { creada_en: "DESC" }
+    });
   }
 
   // HU-15 – actualizar estado de una denuncia (admin)

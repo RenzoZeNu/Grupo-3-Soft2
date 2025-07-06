@@ -1,8 +1,9 @@
-// warmikuna-backend/src/controllers/DenunciaController.ts
+// File: warmikuna-backend/src/controllers/DenunciaController.ts
+
 import { Request, Response, NextFunction } from "express";
-import { validationResult }                from "express-validator";
-import { denunciaService }                from "../services/DenunciaService";
-import { enviarCorreo }                   from "../utils/emailService";
+import { validationResult } from "express-validator";
+import { denunciaService } from "../services/DenunciaService";
+import { enviarCorreo } from "../utils/emailService";
 
 export class DenunciaController {
   /** POST /api/denuncias */
@@ -87,7 +88,27 @@ export class DenunciaController {
     }
   }
 
-  /** GET /api/denuncias */
+  /** HU-14 – Obtener todas las denuncias (solo admin) */
+  public static async obtenerTodas(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const usuario = (req as any).user;
+      if (!usuario || usuario.rol !== "admin") {
+        res.status(403).json({ error: "No autorizado" });
+        return;
+      }
+      const lista = await denunciaService.obtenerTodas();
+      res.status(200).json(lista);
+    } catch (err) {
+      console.error("❌ obtenerTodas:", err);
+      res.status(500).json({ error: "Error interno obteniendo denuncias" });
+    }
+  }
+
+  /** HU-19c – Listar denuncias de un usuario */
   public static async obtenerPorUsuario(
     req: Request,
     res: Response,
@@ -106,6 +127,26 @@ export class DenunciaController {
       res.status(500).json({ error: "Error interno obteniendo denuncias" });
     }
   }
+
+  /** HU-15 – Actualizar estado de una denuncia (solo admin) */
+  public static async actualizarEstado(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const usuario = (req as any).user;
+      if (!usuario || usuario.rol !== "admin") {
+        res.status(403).json({ error: "No autorizado" });
+        return;
+      }
+      const id = parseInt(req.params.id, 10);
+      const { estado } = req.body;
+      const updated = await denunciaService.actualizarEstado(id, estado);
+      res.status(200).json(updated);
+    } catch (err) {
+      console.error("❌ actualizarEstado:", err);
+      res.status(500).json({ error: "Error interno actualizando estado" });
+    }
+  }
 }
-
-

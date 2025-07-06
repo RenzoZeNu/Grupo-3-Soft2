@@ -1,3 +1,5 @@
+// File: src/app/app.routes.ts
+
 import { Routes } from '@angular/router';
 
 // ✏️ RUTAS PÚBLICAS
@@ -14,6 +16,7 @@ import { MisDenunciasComponent }   from './denuncia/mis-denuncias/mis-denuncias.
 import { redirectAuthenticatedGuard } from './guards/redirect-authenticated.guard';
 import { AuthGuard }                  from './guards/auth.guard';
 import { AdminGuard }                 from './guards/admin.guard';
+import { UserGuard }                  from './guards/user.guard';
 
 // ✏️ RUTAS ADMIN
 import { AdminHomeComponent }      from './admin/admin-home/admin-home.component';
@@ -22,32 +25,40 @@ import { AdminUsuariosComponent }  from './admin/admin-usuarios/admin-usuarios.c
 
 export const routes: Routes = [
   // públicas
-  { path: 'login',    component: LoginComponent,    canActivate: [redirectAuthenticatedGuard] },
-  { path: 'registro', component: RegistroComponent, canActivate: [redirectAuthenticatedGuard] },
-  { path: 'recuperar', component: RecuperarComponent,canActivate: [redirectAuthenticatedGuard] },
+  { path: 'login',     component: LoginComponent,    canActivate: [redirectAuthenticatedGuard] },
+  { path: 'registro',  component: RegistroComponent, canActivate: [redirectAuthenticatedGuard] },
+  { path: 'recuperar', component: RecuperarComponent, canActivate: [redirectAuthenticatedGuard] },
 
-  // rutas de usuario logueado
-  { path: 'denunciar',     component: DenunciaFormComponent,  canActivate: [AuthGuard] },
-  { path: 'adjuntar',      component: EvidenciaFormComponent, canActivate: [AuthGuard] },
-  { path: 'mis-denuncias', component: MisDenunciasComponent,  canActivate: [AuthGuard] },
+  // rutas de usuario logueado (solo rol 'user')
+  {
+    path: 'denunciar',
+    component: DenunciaFormComponent,
+    canActivate: [AuthGuard, UserGuard]
+  },
+  {
+    path: 'adjuntar',
+    component: EvidenciaFormComponent,
+    canActivate: [AuthGuard, UserGuard]
+  },
+  {
+    path: 'mis-denuncias',
+    component: MisDenunciasComponent,
+    canActivate: [AuthGuard, UserGuard]
+  },
 
-  // panel de admin
+  // panel de admin (solo rol 'admin')
   {
     path: 'admin',
+    component: AdminHomeComponent,
     canActivate: [AuthGuard, AdminGuard],
     children: [
-      { path: '',          component: AdminHomeComponent },
-      { path: 'denuncias', component: AdminDenunciasComponent },
-      { path: 'usuarios',  component: AdminUsuariosComponent },
+      { path: '',           redirectTo: 'denuncias', pathMatch: 'full' },
+      { path: 'denuncias',  component: AdminDenunciasComponent },
+      { path: 'usuarios',   component: AdminUsuariosComponent }
     ]
   },
 
-  // redirect base
+  // redirect base y wildcard
   { path: '',   redirectTo: 'login', pathMatch: 'full' },
-  // ruta de prueba
-  { path: 'test', component: LoginComponent },
-  // wildcard al final
   { path: '**', redirectTo: 'login' }
 ];
-
-
