@@ -33,7 +33,7 @@ const routes: Routes = [
   { path: 'adjuntar',      component: EvidenciaFormComponent, canActivate: [AuthGuard] },
   { path: 'mis-denuncias', component: MisDenunciasComponent,  canActivate: [AuthGuard] },
 
-  // Admin (hijitas)
+  // Admin 
   {
     path: 'admin',
     canActivate: [AuthGuard, AdminGuard],
