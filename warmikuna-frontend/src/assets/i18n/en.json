@@ -1,19 +1,22 @@
 {
+  "APP": {
+    "BRAND": "Warmikuna",
+    "COLOR_BLIND_MODE": "Color-blind mode"
+  },
   "MENU": {
     "DENUNCIAR": "Make a report",
     "MIS_DENUNCIAS": "My reports",
+    "REPORT": "Make a report",
+    "MY_REPORTS": "My reports",
     "LOGOUT": "Log out"
-  },
-  "SETTINGS": {
-    "COLORBLIND": "Color-blind mode"
   },
   "LOGIN": {
     "TITLE": "Log In",
     "EMAIL": "Email:",
     "PASSWORD": "Password:",
     "SUBMIT": "Log In",
-    "REGISTER": "Register",
-    "FORGOT": "Forgot password?",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "SIGNUP": "Register",
     "ERROR": "Invalid username or password"
   },
   "REGISTER": {
@@ -63,4 +66,3 @@
     "VIEW_FILE": "View file"
   }
 }
-

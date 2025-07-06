@@ -1,14 +1,11 @@
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, UrlTree, Router } from '@angular/router';
 import { inject } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
-export const redirectAuthenticatedGuard: CanActivateFn = () => {
+export const redirectAuthenticatedGuard: CanActivateFn = (): boolean | UrlTree => {
+  const auth = inject(AuthService);
   const router = inject(Router);
-  const isLoggedIn = !!localStorage.getItem('token');
-
-  if (isLoggedIn) {
-    router.navigate(['/denunciar']); // o cualquier otra ruta protegida
-    return false;
-  }
-
-  return true;
+  return auth.currentUserValue
+    ? router.parseUrl('/denunciar')
+    : true;
 };

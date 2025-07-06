@@ -1,8 +1,7 @@
-// warmikuna-backend/src/routes/usuario.routes.ts
 import { Router } from "express";
-import { body } from "express-validator";
+import { body }   from "express-validator";
 import { UsuarioController } from "../controllers/UsuarioController";
-import { authMiddleware } from "../middlewares/authMiddleware";
+import { authMiddleware }    from "../middlewares/authMiddleware";
 
 const router = Router();
 
@@ -17,8 +16,7 @@ router.post(
   body("dni")
     .isLength({ min: 8, max: 8 })
     .withMessage("DNI debe tener 8 dígitos")
-    .isNumeric()
-    .withMessage("DNI solo números"),
+    .isNumeric().withMessage("DNI solo números"),
   UsuarioController.registrar
 );
 
@@ -30,17 +28,20 @@ router.post(
   UsuarioController.login
 );
 
-// POST /api/usuarios/cambiar-contrasena
+// POST /api/usuarios/cambiar-contrasena  ← pública, recibe { correo, dni, password }
 router.post(
   "/cambiar-contrasena",
-  authMiddleware,
-  body("oldPassword").notEmpty().withMessage("Contraseña actual obligatoria"),
-  body("newPassword")
+  body("correo").isEmail().withMessage("Email inválido"),
+  body("dni")
+    .isLength({ min: 8, max: 8 })
+    .withMessage("DNI debe tener 8 dígitos")
+    .isNumeric().withMessage("DNI solo números"),
+  body("password")
     .isLength({ min: 6 })
-    .withMessage("Nueva contraseña mínimo 6 caracteres"),
+    .withMessage("Contraseña mínimo 6 caracteres"),
   UsuarioController.cambiarContrasena
 );
 
+router.use(authMiddleware);
+
 export default router;
-
-

@@ -1,19 +1,22 @@
 {
+  "APP": {
+    "BRAND": "Warmikuna",
+    "COLOR_BLIND_MODE": "Daltonismomax"
+  },
   "MENU": {
     "DENUNCIAR": "Kamawan uñjayaña",
     "MIS_DENUNCIAS": "Nayax uñjayata",
+    "REPORT": "Kamawan uñjayaña",
+    "MY_REPORTS": "Nayax uñjayata",
     "LOGOUT": "Sutupañä"
-  },
-  "SETTINGS": {
-    "COLORBLIND": "Daltonismomax"
   },
   "LOGIN": {
     "TITLE": "Sam uñjaya",
     "EMAIL": "Email:",
     "PASSWORD": "Sutiy:",
     "SUBMIT": "Sam uñjaya",
-    "REGISTER": "Registra",
-    "FORGOT": "Sutita mayjt’iwa?",
+    "FORGOT_PASSWORD": "Sutita mayjt’iwa?",
+    "SIGNUP": "Registra",
     "ERROR": "Email ni sutiy ajjitäkiti"
   },
   "REGISTER": {
@@ -63,4 +66,3 @@
     "VIEW_FILE": "Archivo uñjata"
   }
 }
-

@@ -1,4 +1,3 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
 // ✏️ RUTAS PÚBLICAS
@@ -17,9 +16,9 @@ import { AuthGuard }                  from './guards/auth.guard';
 import { AdminGuard }                 from './guards/admin.guard';
 
 // ✏️ RUTAS ADMIN
-import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
+import { AdminHomeComponent }      from './admin/admin-home/admin-home.component';
 import { AdminDenunciasComponent } from './admin/admin-denuncias/admin-denuncias.component';
-import { AdminUsuariosComponent } from './admin/admin-usuarios/admin-usuarios.component';
+import { AdminUsuariosComponent }  from './admin/admin-usuarios/admin-usuarios.component';
 
 export const routes: Routes = [
   // públicas
@@ -43,9 +42,12 @@ export const routes: Routes = [
     ]
   },
 
-  // redirect base y wildcard
+  // redirect base
   { path: '',   redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' },
-  { path: 'test', component: LoginComponent }
+  // ruta de prueba
+  { path: 'test', component: LoginComponent },
+  // wildcard al final
+  { path: '**', redirectTo: 'login' }
 ];
+
 

@@ -1,4 +1,3 @@
-// warmikuna-backend/src/controllers/UsuarioController.ts
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import { usuarioService } from "../services/UsuarioService";
@@ -45,7 +44,6 @@ export class UsuarioController {
   ): Promise<void> {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log("Validación fallida:", errors.array());
       res.status(400).json({ errores: errors.array() });
       return;
     }
@@ -77,7 +75,15 @@ export class UsuarioController {
         { expiresIn: expires } as jwt.SignOptions
       );
 
-      res.json({ token });
+      // Devolvemos token y datos del usuario
+      res.json({
+        token,
+        usuario: {
+          id: user.id,
+          correo: user.correo,
+          rol: user.rol
+        }
+      });
     } catch (err) {
       next(err);
     }
@@ -96,23 +102,29 @@ export class UsuarioController {
     }
 
     try {
-      const userId = (req as any).user.id as number;
-      const { oldPassword, newPassword } = req.body;
-      const user = await usuarioService.buscarPorId(userId);
-      const ok = await bcrypt.compare(oldPassword, user.password);
-      if (!ok) {
-        res.status(400).json({ error: "Contraseña actual incorrecta" });
+      const { correo, dni, password } = req.body;
+
+      // 1. Busca usuario por correo
+      const user = await usuarioService.buscarPorCorreo(correo);
+      if (!user) {
+        res.status(404).json({ error: "Usuario no encontrado" });
         return;
       }
 
-      const hashed = await bcrypt.hash(newPassword, 10);
-      await usuarioService.actualizarPassword(userId, hashed);
-      res.json({ mensaje: "Contraseña actualizada" });
+      // 2. Verifica que el DNI coincida
+      if (user.dni !== dni) {
+        res.status(400).json({ error: "DNI incorrecto" });
+        return;
+      }
+
+      // 3. Hashea la nueva contraseña y actualiza
+      const hashed = await bcrypt.hash(password, 10);
+      await usuarioService.actualizarPassword(user.id, hashed);
+
+      // 4. Responde éxito
+      res.json({ mensaje: "Contraseña actualizada correctamente" });
     } catch (err) {
       next(err);
     }
   }
 }
-
-
-

@@ -1,19 +1,22 @@
 {
+  "APP": {
+    "BRAND": "Warmikuna",
+    "COLOR_BLIND_MODE": "Modo daltónico"
+  },
   "MENU": {
     "DENUNCIAR": "Realizar denuncia",
     "MIS_DENUNCIAS": "Mis denuncias",
+    "REPORT": "Realizar denuncia",
+    "MY_REPORTS": "Mis denuncias",
     "LOGOUT": "Cerrar sesión"
-  },
-  "SETTINGS": {
-    "COLORBLIND": "Modo daltónico"
   },
   "LOGIN": {
     "TITLE": "Iniciar sesión",
-    "EMAIL": "Correo:",
+    "EMAIL": "Correo electrónico:",
     "PASSWORD": "Contraseña:",
     "SUBMIT": "Iniciar sesión",
-    "REGISTER": "Regístrate",
-    "FORGOT": "¿Olvidaste tu contraseña?",
+    "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+    "SIGNUP": "Registrarse",
     "ERROR": "Usuario o contraseña incorrectos"
   },
   "REGISTER": {
@@ -63,6 +66,3 @@
     "VIEW_FILE": "Ver archivo"
   }
 }
-
-
-

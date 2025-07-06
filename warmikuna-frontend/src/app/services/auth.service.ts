@@ -1,4 +1,3 @@
-// src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -13,17 +12,10 @@ export interface LoginResponse {
 export class AuthService {
   private base = 'http://localhost:3000/api/usuarios';
   private _currentUser = new BehaviorSubject<LoginResponse['usuario'] | null>(null);
-  public currentUser$ = this._currentUser.asObservable();
+  public  currentUser$ = this._currentUser.asObservable();
 
   constructor(private http: HttpClient) {
-    const saved = localStorage.getItem('usuario');
-    if (saved) {
-      try {
-        this._currentUser.next(JSON.parse(saved));
-      } catch {
-        localStorage.removeItem('usuario');
-      }
-    }
+    // ← ¡Eliminado el auto-login desde localStorage!
   }
 
   /** Getter para el guard */
@@ -60,8 +52,8 @@ export class AuthService {
 
   recuperar(correo: string, dni: string, nuevaContrasena: string): Observable<any> {
     return this.http.post(
-      `${this.base}/cambiar-contrasena`, // ajusta al endpoint real
-      { correo, dni, newPassword: nuevaContrasena }
+      `${this.base}/cambiar-contrasena`,
+      { correo, dni, password: nuevaContrasena }
     );
   }
 
@@ -71,5 +63,3 @@ export class AuthService {
     this._currentUser.next(null);
   }
 }
-
-

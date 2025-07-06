@@ -1,19 +1,22 @@
 {
+  "APP": {
+    "BRAND": "Warmikuna",
+    "COLOR_BLIND_MODE": "Daltonimun munay"
+  },
   "MENU": {
     "DENUNCIAR": "Kamachiy rikuy",
     "MIS_DENUNCIAS": "Ñuqanchik rikuykuna",
+    "REPORT": "Kamachiy rikuy",
+    "MY_REPORTS": "Ñuqanchik rikuykuna",
     "LOGOUT": "Qallariy"
-  },
-  "SETTINGS": {
-    "COLORBLIND": "Daltonimun munay"
   },
   "LOGIN": {
     "TITLE": "Rikch'ariy",
     "EMAIL": "Imaynataq qillqa:",
     "PASSWORD": "Simi kuy:",
     "SUBMIT": "Rikch'ariy",
-    "REGISTER": "Rikuychis",
-    "FORGOT": "Simita musuq?",
+    "FORGOT_PASSWORD": "Simita musuq?",
+    "SIGNUP": "Rikuychis",
     "ERROR": "Qillqa mana kutinchu"
   },
   "REGISTER": {
@@ -63,4 +66,3 @@
     "VIEW_FILE": "Riwy uñchay"
   }
 }
-

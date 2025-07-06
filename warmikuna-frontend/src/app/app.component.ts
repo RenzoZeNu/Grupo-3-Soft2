@@ -7,6 +7,7 @@ import {
   TranslateService
 } from '@ngx-translate/core';
 import { PreferenciasService } from './services/preferencias.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,7 @@ import { PreferenciasService } from './services/preferencias.service';
   imports: [
     CommonModule,
     RouterModule,
-    RouterOutlet,       // ← ✅ Este es el fix que te falta
+    RouterOutlet,
     FormsModule,
     TranslateModule
   ],
@@ -28,43 +29,43 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private prefs: PreferenciasService
+    private prefs: PreferenciasService,
+    private auth: AuthService
   ) {}
 
   ngOnInit() {
-    this.translate.addLangs(['es', 'qu', 'ay', 'en']);
+    this.translate.addLangs(['es','qu','ay','en']);
     this.translate.setDefaultLang('es');
     const saved = localStorage.getItem('idioma') as any;
     this.idioma = saved || this.translate.getDefaultLang();
     this.translate.use(this.idioma);
-    this.modoDaltonico = localStorage.getItem('modoDaltonico') === 'true';
-    document.body.classList[this.modoDaltonico ? 'add' : 'remove']('color-blind');
+    this.modoDaltonico = localStorage.getItem('modoDaltonico')==='true';
+    document.body.classList[this.modoDaltonico?'add':'remove']('color-blind');
   }
 
-  isLoggedIn() {
+  isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    localStorage.removeItem('usuario');
+    this.router.navigate(['/login'], { replaceUrl: true });
+    this.auth.logout();
+    this.router.navigate(['/login'], { replaceUrl: true });
   }
 
-  onIdiomaChange() {
+  onIdiomaChange(): void {
     this.translate.use(this.idioma);
     localStorage.setItem('idioma', this.idioma);
-    this.prefs.actualizar({ idioma: this.idioma, modoDaltonico: this.modoDaltonico }).subscribe();
+    this.prefs.actualizar({ idioma: this.idioma, modoDaltonico: this.modoDaltonico })
+      .subscribe();
   }
 
-  onModoDaltonicoChange() {
-    document.body.classList[this.modoDaltonico ? 'add' : 'remove']('color-blind');
+  onModoDaltonicoChange(): void {
+    document.body.classList[this.modoDaltonico?'add':'remove']('color-blind');
     localStorage.setItem('modoDaltonico', String(this.modoDaltonico));
-    this.prefs.actualizar({ idioma: this.idioma, modoDaltonico: this.modoDaltonico }).subscribe();
+    this.prefs.actualizar({ idioma: this.idioma, modoDaltonico: this.modoDaltonico })
+      .subscribe();
   }
 }
-
-
-
-
-
-

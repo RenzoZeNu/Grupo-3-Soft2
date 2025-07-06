@@ -1,31 +1,46 @@
-<div class="container mt-4">
-  <h2>{{ 'REGISTER.TITLE' | translate }}</h2>
-  <form (ngSubmit)="registrar()">
-    <div class="mb-3">
-      <label for="nombre">{{ 'REGISTER.NAME' | translate }}</label>
-      <input id="nombre" class="form-control"
-             [(ngModel)]="nombre" name="nombre" required />
-    </div>
-    <div class="mb-3">
-      <label for="correo">{{ 'REGISTER.EMAIL' | translate }}</label>
-      <input id="correo" type="email" class="form-control"
-             [(ngModel)]="correo" name="correo" required />
-    </div>
-    <div class="mb-3">
-      <label for="contrasena">{{ 'REGISTER.PASSWORD' | translate }}</label>
-      <input id="contrasena" type="password" class="form-control"
-             [(ngModel)]="contrasena" name="contrasena" required />
-    </div>
-    <div class="mb-3">
-      <label for="dni">{{ 'REGISTER.DNI' | translate }}</label>
-      <input id="dni" class="form-control"
-             [(ngModel)]="dni" name="dni" required />
-    </div>
-    <button class="btn btn-primary">{{ 'REGISTER.SUBMIT' | translate }}</button>
-  </form>
-  <p *ngIf="mensaje" class="text-success">{{ mensaje }}</p>
-  <p *ngIf="error" class="text-danger">{{ error }}</p>
-</div>
+<h1>{{ 'REGISTER.TITLE' | translate }}</h1>
 
+<form (ngSubmit)="registrar()">
+  <div class="mb-3">
+    <label for="nombre">{{ 'REGISTER.NAME' | translate }}</label>
+    <input id="nombre"
+           type="text"
+           [(ngModel)]="nombre"
+           name="nombre"
+           required
+           class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label for="email">{{ 'REGISTER.EMAIL' | translate }}</label>
+    <input id="email"
+           type="email"
+           [(ngModel)]="correo"
+           name="correo"
+           required
+           class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label for="dni">{{ 'REGISTER.DNI' | translate }}</label>
+    <input id="dni"
+           type="text"
+           [(ngModel)]="dni"
+           name="dni"
+           required
+           class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label for="pwd">{{ 'REGISTER.PASSWORD' | translate }}</label>
+    <input id="pwd"
+           type="password"
+           [(ngModel)]="contrasena"
+           name="contrasena"
+           required
+           class="form-control" />
+  </div>
+  <button class="btn btn-primary" type="submit">
+    {{ 'REGISTER.SUBMIT' | translate }}
+  </button>
+</form>
 
-
+<div *ngIf="error" class="alert alert-danger mt-2">{{ error }}</div>
+<div *ngIf="success" class="alert alert-success mt-2">{{ success }}</div>

@@ -1,17 +1,53 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
-  <a class="navbar-brand" routerLink="/">Warmikuna</a>
+  <a class="navbar-brand" routerLink="/">{{ 'APP.BRAND' | translate }}</a>
 
+  <div class="d-flex align-items-center ms-auto me-3">
+    <select
+      class="form-select form-select-sm me-2"
+      [(ngModel)]="idioma"
+      (ngModelChange)="onIdiomaChange()"
+    >
+      <option value="es">ES</option>
+      <option value="qu">QU</option>
+      <option value="ay">AY</option>
+      <option value="en">EN</option>
+    </select>
+
+    <label class="form-check-label me-4">
+      <input
+        type="checkbox"
+        class="form-check-input me-1"
+        [(ngModel)]="modoDaltonico"
+        (change)="onModoDaltonicoChange()"
+      />
+      {{ 'APP.COLOR_BLIND_MODE' | translate }}
+    </label>
+
+    <button
+      *ngIf="isLoggedIn()"
+      class="btn btn-outline-danger"
+      (click)="logout()"
+    >
+      {{ 'MENU.LOGOUT' | translate }}
+    </button>
+  </div>
+
+  <!-- elementos protegidos -->
   <div class="collapse navbar-collapse" *ngIf="isLoggedIn()">
     <ul class="navbar-nav me-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/denunciar">Realizar denuncia</a>
+        <a class="nav-link" routerLink="/denunciar">
+          {{ 'MENU.REPORT' | translate }}
+        </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/mis-denuncias">Mis denuncias</a>
+        <a class="nav-link" routerLink="/mis-denuncias">
+          {{ 'MENU.MY_REPORTS' | translate }}
+        </a>
       </li>
     </ul>
-    <button class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
   </div>
 </nav>
 
 <router-outlet></router-outlet>
+
